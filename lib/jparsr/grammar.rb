@@ -22,6 +22,54 @@
 # 
 
 
-module JParsr
+require 'parslet'
 
+module JParsr 
+
+  class Grammar < Parslet::Parser
+    rule(:space)       { match["\s\n\r"].repeat }
+    rule(:space?)      { space.maybe }
+    rule(:skip)        { space? }
+
+    rule(:dot)         { str('.') >> skip}
+    rule(:semicolon)   { str(';') >> skip}
+    rule(:lcurly)      { str('{') >> skip}
+    rule(:rcurly)      { str('}') >> skip}
+
+    rule(:package_kw)  { str('package') >> skip }
+    rule(:class_kw)    { str('class') >> skip }
+
+    rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
+
+    rule(:package_name) { literal >> (dot >> literal).repeat.maybe }
+
+    rule(:any_between_curlies) do
+      (match('[^{}]')).repeat.maybe >>
+      (str('{') >> any_between_curlies >> str('}') >> any_between_curlies).maybe
+    end
+
+    rule(:package_def) do
+      package_kw >>
+      package_name >>
+      semicolon >> 
+      skip
+    end
+
+    rule(:class_def) do
+      class_kw >>
+      literal >>
+      lcurly >>
+        any_between_curlies >>
+      rcurly >>
+      skip
+    end
+
+    rule(:source_file) do
+      skip >>
+      package_def.maybe >>
+      class_def.maybe
+    end
+
+    root :source_file
+  end
 end

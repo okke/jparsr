@@ -24,10 +24,14 @@
 require 'spec_helper'
 
 
-describe JParsr do
+describe JParsr::Grammar do
 
-  it "should dynamically create a function to define a graph" do
+  it "should accept an empty source file to parse" do
+    grammar = JParsr::Grammar.new
+    grammar.parse(%Q{
+    })
 
   end
+
 
 end
