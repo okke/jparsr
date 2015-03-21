@@ -24,7 +24,7 @@
 require 'spec_helper'
 
 
-describe Grafr do
+describe JParsr do
 
   it "should dynamically create a function to define a graph" do
 

@@ -1,14 +1,14 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'grafr/version'
+require 'jparsr/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "jparsr"
   spec.version       = JParsr::VERSION
   spec.authors       = ["okke"]
   spec.email         = ["oftewel@gmail.com"]
-  spec.summary       = %q{Java parsing library}§
+  spec.summary       = %q{Java parsing library}
   spec.description   = %q{Java source code parsing stuff"}
   spec.homepage      = ""
   spec.license       = "MIT"
