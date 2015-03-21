@@ -23,14 +23,27 @@
 
 require 'spec_helper'
 
+def parse(s)
+  JParsr::Grammar.new.parse(s)
+end
 
 describe JParsr::Grammar do
 
   it "should accept an empty source file to parse" do
-    grammar = JParsr::Grammar.new
-    grammar.parse(%Q{
+    parse(%Q{
     })
+  end
 
+  it "should accept a package statement" do
+    parse(%Q{
+      package soep;
+    })
+  end
+
+  it "should accept a nested package statement" do
+    parse(%Q{
+      package com.soep.bowl;
+    })
   end
 
 
