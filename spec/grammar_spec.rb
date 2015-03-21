@@ -46,5 +46,35 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept an empty class" do
+    parse(%Q{
+      class Soep {
+      }
+    })
+  end
+
+  it "should accept an multple classes" do
+    parse(%Q{
+      class Soep {
+      }
+      class SoepBowl {
+      }
+    })
+  end
+
+  it "should accept a public class" do
+    parse(%Q{
+      public class Soep {
+      }
+    })
+  end
+
+  it "should accept a public final class" do
+    parse(%Q{
+      public final class Soep {
+      }
+    })
+  end
+
 
 end

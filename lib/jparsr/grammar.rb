@@ -37,12 +37,15 @@ module JParsr
     rule(:rcurly)      { str('}') >> skip}
 
     rule(:package_kw)  { str('package') >> skip }
+    rule(:public_kw)   { str('public') >> skip }
+    rule(:final_kw)    { str('final') >> skip }
     rule(:class_kw)    { str('class') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
     rule(:package_name) { literal >> (dot >> literal).repeat.maybe }
 
+    # NOT USED YET
     rule(:any_between_curlies) do
       (match('[^{}]')).repeat.maybe >>
       (str('{') >> any_between_curlies >> str('}') >> any_between_curlies).maybe
@@ -55,11 +58,15 @@ module JParsr
       skip
     end
 
+    rule(:class_modifier) do
+      public_kw >> final_kw.maybe
+    end
+
     rule(:class_def) do
+      class_modifier.maybe >>
       class_kw >>
       literal >>
       lcurly >>
-        any_between_curlies >>
       rcurly >>
       skip
     end
@@ -67,7 +74,7 @@ module JParsr
     rule(:source_file) do
       skip >>
       package_def.maybe >>
-      class_def.maybe
+      class_def.repeat.maybe
     end
 
     root :source_file
