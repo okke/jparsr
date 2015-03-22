@@ -44,10 +44,13 @@ module JParsr
     rule(:class_kw)    { str('class') >> skip }
     rule(:import_kw)   { str('import') >> skip }
     rule(:static_kw)   { str('static') >> skip }
+    rule(:extends_kw)  { str('extends') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
     rule(:package_name) { literal >> (dot >> literal).repeat.maybe }
+
+    rule(:type_name)   { literal }
 
     rule(:package_declaration) do
       package_kw >>
@@ -70,10 +73,16 @@ module JParsr
       (public_kw | final_kw | abstract_kw).repeat
     end
 
+    rule(:extends) do
+      extends_kw >>
+      type_name
+    end
+
     rule(:class_declaration) do
       class_modifier.maybe >>
       class_kw >>
-      literal >>
+      type_name >>
+      extends.maybe >>
       lcurly >>
       rcurly >>
       skip

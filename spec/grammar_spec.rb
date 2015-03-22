@@ -129,5 +129,12 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept class inheritance" do
+    parse(%Q{
+      class Soep extends Bowl {
+      }
+    })
+  end
+
 
 end
