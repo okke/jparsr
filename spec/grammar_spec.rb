@@ -182,5 +182,27 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept field modifiers" do
+    parse(%Q{
+      class Soep {
+        public int i1;
+        private int i2;
+        protected int i3;
+        static int i4;
+        final int i5;
+        transient int i6;
+        volatile int i7;
+      }
+    })
+  end
+
+  it "should accept multiple field modifiers" do
+    parse(%Q{
+      class Soep {
+        public final static int i1;
+      }
+    })
+  end
+
 
 end

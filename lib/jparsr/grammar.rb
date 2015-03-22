@@ -40,6 +40,10 @@ module JParsr
 
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
+    rule(:private_kw)  { str('private') >> skip }
+    rule(:protected_kw){ str('protected') >> skip }
+    rule(:transient_kw){ str('transient') >> skip }
+    rule(:volatile_kw) { str('volatile') >> skip }
     rule(:final_kw)    { str('final') >> skip }
     rule(:abstract_kw) { str('abstract') >> skip }
     rule(:class_kw)    { str('class') >> skip }
@@ -97,8 +101,12 @@ module JParsr
       (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
     end
 
+    rule(:field_modifier) do
+      (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw)
+    end 
+
     rule(:field_declaration) do
-      primitive_type >> literal >> semicolon
+      field_modifier.repeat.maybe >> primitive_type >> literal >> semicolon
     end
 
     rule(:class_body_declaration) do
