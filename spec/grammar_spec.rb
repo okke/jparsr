@@ -266,5 +266,14 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept character literals" do
+    parse(%Q{
+      class Soep {
+        char c = 'c';
+        char d = '\\r';
+      }
+    })
+  end
+
 
 end

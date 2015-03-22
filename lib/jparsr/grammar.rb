@@ -79,12 +79,20 @@ module JParsr
 
     rule(:boolean_literal) { (true_kw | false_kw) }
 
+    rule(:char_literal) {
+      str("'") >>
+      str("\\").maybe >>
+      (str("'").absent? >> any) >>
+      str("'") >>
+      skip
+    }
+
     rule(:package_name) { id >> (dot >> id).repeat.maybe }
 
     rule(:type_name)   { id }
 
     rule(:expression) do
-      (boolean_literal | numeric_literal)
+      (char_literal | boolean_literal | numeric_literal)
     end
 
 
