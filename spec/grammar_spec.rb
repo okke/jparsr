@@ -121,5 +121,13 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a static import" do
+    parse(%Q{
+      import static com.soup.Bowl;
+      class Soep {
+      }
+    })
+  end
+
 
 end

@@ -43,6 +43,7 @@ module JParsr
     rule(:abstract_kw) { str('abstract') >> skip }
     rule(:class_kw)    { str('class') >> skip }
     rule(:import_kw)   { str('import') >> skip }
+    rule(:static_kw)   { str('static') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
@@ -65,6 +66,7 @@ module JParsr
     #
     rule(:import_def) do
       import_kw >>
+      static_kw.maybe >>
       (literal >> (dot >> (star | literal)).repeat.maybe) >>
       semicolon >> 
       skip
