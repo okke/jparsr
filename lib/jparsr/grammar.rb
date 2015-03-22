@@ -65,11 +65,15 @@ module JParsr
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat >> skip}
 
-    rule(:decimal_literal) { 
+    # TODO this also matches hexadecimal floating points
+    #
+    rule(:numeric_literal) { 
       str('0x').maybe >> 
       str('0X').maybe >> 
       match('[0-9]').repeat >> 
-      match('[lL]').maybe >> 
+      (str('.') >> match('[0-9]').repeat).maybe >> 
+      (match('[eE]') >> match('[+-]').maybe >> match('[0-9]').repeat).maybe >> 
+      match('[lLdDfF]').maybe >> 
       skip
     }
 
@@ -80,7 +84,7 @@ module JParsr
     rule(:type_name)   { id }
 
     rule(:expression) do
-      (boolean_literal | decimal_literal)
+      (boolean_literal | numeric_literal)
     end
 
 

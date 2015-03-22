@@ -250,5 +250,21 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept floating point literals" do
+    parse(%Q{
+      class Soep {
+        double d = 1.2;
+        double e = .2;
+        double f = .2f;
+        double g = 0.2F;
+        double h = 0.2d;
+        double i = 1.2D;
+        double j = 2e5;
+        double k = 2e+15;
+        double l = 2e-15;
+      }
+    })
+  end
+
 
 end
