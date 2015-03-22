@@ -109,8 +109,12 @@ module JParsr
       (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw)
     end 
 
+    rule(:field_names) do
+      literal >> (comma >> literal).repeat.maybe
+    end
+
     rule(:field_declaration) do
-      field_modifier.repeat.maybe >> member_type >> literal >> semicolon
+      field_modifier.repeat.maybe >> member_type >> field_names >> semicolon
     end
 
     rule(:class_body_declaration) do

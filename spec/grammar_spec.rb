@@ -212,5 +212,13 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept multiple field names" do
+    parse(%Q{
+      class Soep {
+        int i1, i2, i3;
+      }
+    })
+  end
+
 
 end
