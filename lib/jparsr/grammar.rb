@@ -35,6 +35,7 @@ module JParsr
     rule(:semicolon)   { str(';') >> skip}
     rule(:lcurly)      { str('{') >> skip}
     rule(:rcurly)      { str('}') >> skip}
+    rule(:star)        { str('*') >> skip}
 
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
@@ -60,9 +61,11 @@ module JParsr
       skip
     end
 
+    # TODO, current import allows multiple '*'s in declaration
+    #
     rule(:import_def) do
       import_kw >>
-      literal >>
+      (literal >> (dot >> (star | literal)).repeat.maybe) >>
       semicolon >> 
       skip
     end

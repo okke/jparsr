@@ -105,5 +105,21 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a fully qualified class import" do
+    parse(%Q{
+      import com.soup.Bowl;
+      class Soep {
+      }
+    })
+  end
+
+  it "should accept a wildcard package import" do
+    parse(%Q{
+      import com.soup.*;
+      class Soep {
+      }
+    })
+  end
+
 
 end
