@@ -76,5 +76,26 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a final public class" do
+    parse(%Q{
+      final public class Soep {
+      }
+    })
+  end
+
+  it "should accept an abstract class" do
+    parse(%Q{
+      abstract class Soep {
+      }
+    })
+  end
+
+  it "should accept a public abstract class" do
+    parse(%Q{
+      public abstract class Soep {
+      }
+    })
+  end
+
 
 end

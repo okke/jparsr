@@ -39,6 +39,7 @@ module JParsr
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
     rule(:final_kw)    { str('final') >> skip }
+    rule(:abstract_kw) { str('abstract') >> skip }
     rule(:class_kw)    { str('class') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
@@ -59,7 +60,7 @@ module JParsr
     end
 
     rule(:class_modifier) do
-      public_kw >> final_kw.maybe
+      (public_kw | final_kw | abstract_kw).repeat
     end
 
     rule(:class_def) do
