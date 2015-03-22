@@ -229,5 +229,26 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept long decimal literals" do
+    parse(%Q{
+      class Soep {
+        int i = 3l;
+        int j = 3L;
+      }
+    })
+  end
+
+  it "should accept hexadecimal and octal literals" do
+    parse(%Q{
+      class Soep {
+        int i = 0x3;
+        int j = 0X3;
+        int p = 0X3l;
+        int q = 0X3L;
+        int o = 0777;
+      }
+    })
+  end
+
 
 end

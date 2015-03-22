@@ -65,7 +65,14 @@ module JParsr
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat >> skip}
 
-    rule(:decimal_literal) { match('[0-9]').repeat >> skip}
+    rule(:decimal_literal) { 
+      str('0x').maybe >> 
+      str('0X').maybe >> 
+      match('[0-9]').repeat >> 
+      match('[lL]').maybe >> 
+      skip
+    }
+
     rule(:boolean_literal) { (true_kw | false_kw) }
 
     rule(:package_name) { id >> (dot >> id).repeat.maybe }
