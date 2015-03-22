@@ -150,5 +150,37 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a single integer field member" do
+    parse(%Q{
+      class Soep {
+        int i;
+      }
+    })
+  end
+
+  it "should accept a multiple field members" do
+    parse(%Q{
+      class Soep {
+        int i;
+        int j;
+      }
+    })
+  end
+
+  it "should accept all primitive field members" do
+    parse(%Q{
+      class Soep {
+        boolean b;
+        byte b2;
+        short s;
+        int i;
+        long l;
+        char c;
+        float f;
+        double d;
+      }
+    })
+  end
+
 
 end

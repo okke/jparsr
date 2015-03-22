@@ -47,6 +47,14 @@ module JParsr
     rule(:static_kw)   { str('static') >> skip }
     rule(:extends_kw)  { str('extends') >> skip }
     rule(:implements_kw)  { str('implements') >> skip }
+    rule(:int_kw)      { str('int') >> skip }
+    rule(:boolean_kw)  { str('boolean') >> skip }
+    rule(:byte_kw)     { str('byte') >> skip }
+    rule(:short_kw)    { str('short') >> skip }
+    rule(:long_kw)     { str('long') >> skip }
+    rule(:char_kw)     { str('char') >> skip }
+    rule(:float_kw)    { str('float') >> skip }
+    rule(:double_kw)   { str('double') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
@@ -85,6 +93,18 @@ module JParsr
       type_name >> (comma >> type_name).repeat.maybe
     end
 
+    rule(:primitive_type) do
+      (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
+    end
+
+    rule(:field_declaration) do
+      primitive_type >> literal >> semicolon
+    end
+
+    rule(:class_body_declaration) do
+      field_declaration
+    end
+
     rule(:class_declaration) do
       class_modifier.maybe >>
       class_kw >>
@@ -92,6 +112,7 @@ module JParsr
       extends.maybe >>
       implements.maybe >>
       lcurly >>
+      class_body_declaration.repeat.maybe >>
       rcurly >>
       skip
     end
