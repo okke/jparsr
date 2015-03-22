@@ -97,5 +97,13 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a class import" do
+    parse(%Q{
+      import Bowl;
+      class Soep {
+      }
+    })
+  end
+
 
 end

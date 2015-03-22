@@ -41,6 +41,7 @@ module JParsr
     rule(:final_kw)    { str('final') >> skip }
     rule(:abstract_kw) { str('abstract') >> skip }
     rule(:class_kw)    { str('class') >> skip }
+    rule(:import_kw)   { str('import') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
@@ -55,6 +56,13 @@ module JParsr
     rule(:package_def) do
       package_kw >>
       package_name >>
+      semicolon >> 
+      skip
+    end
+
+    rule(:import_def) do
+      import_kw >>
+      literal >>
       semicolon >> 
       skip
     end
@@ -75,6 +83,7 @@ module JParsr
     rule(:source_file) do
       skip >>
       package_def.maybe >>
+      import_def.maybe >>
       class_def.repeat.maybe
     end
 
