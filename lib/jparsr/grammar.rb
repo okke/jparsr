@@ -49,13 +49,7 @@ module JParsr
 
     rule(:package_name) { literal >> (dot >> literal).repeat.maybe }
 
-    # NOT USED YET
-    rule(:any_between_curlies) do
-      (match('[^{}]')).repeat.maybe >>
-      (str('{') >> any_between_curlies >> str('}') >> any_between_curlies).maybe
-    end
-
-    rule(:package_def) do
+    rule(:package_declaration) do
       package_kw >>
       package_name >>
       semicolon >> 
@@ -64,7 +58,7 @@ module JParsr
 
     # TODO, current import allows multiple '*'s in declaration
     #
-    rule(:import_def) do
+    rule(:import_declaration) do
       import_kw >>
       static_kw.maybe >>
       (literal >> (dot >> (star | literal)).repeat.maybe) >>
@@ -76,7 +70,7 @@ module JParsr
       (public_kw | final_kw | abstract_kw).repeat
     end
 
-    rule(:class_def) do
+    rule(:class_declaration) do
       class_modifier.maybe >>
       class_kw >>
       literal >>
@@ -87,9 +81,9 @@ module JParsr
 
     rule(:source_file) do
       skip >>
-      package_def.maybe >>
-      import_def.maybe >>
-      class_def.repeat.maybe
+      package_declaration.maybe >>
+      import_declaration.maybe >>
+      class_declaration.repeat.maybe
     end
 
     root :source_file
