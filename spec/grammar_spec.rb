@@ -204,5 +204,13 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept class type fields" do
+    parse(%Q{
+      class Soep {
+        Bowl bowl;
+      }
+    })
+  end
+
 
 end

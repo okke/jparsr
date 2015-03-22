@@ -101,12 +101,16 @@ module JParsr
       (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
     end
 
+    rule(:member_type) do
+      (primitive_type | type_name)
+    end
+
     rule(:field_modifier) do
       (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw)
     end 
 
     rule(:field_declaration) do
-      field_modifier.repeat.maybe >> primitive_type >> literal >> semicolon
+      field_modifier.repeat.maybe >> member_type >> literal >> semicolon
     end
 
     rule(:class_body_declaration) do
