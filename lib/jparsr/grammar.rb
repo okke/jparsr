@@ -37,6 +37,7 @@ module JParsr
     rule(:rcurly)      { str('}') >> skip}
     rule(:star)        { str('*') >> skip}
     rule(:comma)       { str(',') >> skip}
+    rule(:assign)      { str('=') >> skip}
 
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
@@ -59,12 +60,23 @@ module JParsr
     rule(:char_kw)     { str('char') >> skip }
     rule(:float_kw)    { str('float') >> skip }
     rule(:double_kw)   { str('double') >> skip }
+    rule(:true_kw)     { str('true') >> skip }
+    rule(:false_kw)    { str('false') >> skip }
 
-    rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
+    rule(:id)          { match('[a-zA-Z0-9_]').repeat >> skip}
 
-    rule(:package_name) { literal >> (dot >> literal).repeat.maybe }
+    rule(:decimal_literal) { match('[0-9]').repeat >> skip}
+    rule(:boolean_literal) { (true_kw | false_kw) }
 
-    rule(:type_name)   { literal }
+    rule(:package_name) { id >> (dot >> id).repeat.maybe }
+
+    rule(:type_name)   { id }
+
+    rule(:expression) do
+      (boolean_literal | decimal_literal)
+    end
+
+
 
     rule(:package_declaration) do
       package_kw >>
@@ -78,7 +90,7 @@ module JParsr
     rule(:import_declaration) do
       import_kw >>
       static_kw.maybe >>
-      (literal >> (dot >> (star | literal)).repeat.maybe) >>
+      (id >> (dot >> (star | id)).repeat.maybe) >>
       semicolon >> 
       skip
     end
@@ -110,11 +122,19 @@ module JParsr
     end 
 
     rule(:field_names) do
-      literal >> (comma >> literal).repeat.maybe
+      id >> (comma >> id).repeat.maybe
+    end
+
+    rule(:field_initializer) do
+      assign >> expression
     end
 
     rule(:field_declaration) do
-      field_modifier.repeat.maybe >> member_type >> field_names >> semicolon
+      field_modifier.repeat.maybe >> 
+      member_type >> 
+      field_names >> 
+      field_initializer.maybe >> 
+      semicolon
     end
 
     rule(:class_body_declaration) do

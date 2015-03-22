@@ -220,5 +220,14 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a primitive field initializer" do
+    parse(%Q{
+      class Soep {
+        boolean bt = true;
+        int i1 = 3;
+      }
+    })
+  end
+
 
 end
