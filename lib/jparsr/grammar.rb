@@ -36,6 +36,7 @@ module JParsr
     rule(:lcurly)      { str('{') >> skip}
     rule(:rcurly)      { str('}') >> skip}
     rule(:star)        { str('*') >> skip}
+    rule(:comma)       { str(',') >> skip}
 
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
@@ -45,6 +46,7 @@ module JParsr
     rule(:import_kw)   { str('import') >> skip }
     rule(:static_kw)   { str('static') >> skip }
     rule(:extends_kw)  { str('extends') >> skip }
+    rule(:implements_kw)  { str('implements') >> skip }
 
     rule(:literal)     { match('[a-zA-Z0-9_]').repeat >> skip}
 
@@ -78,11 +80,17 @@ module JParsr
       type_name
     end
 
+    rule(:implements) do
+      implements_kw >>
+      type_name >> (comma >> type_name).repeat.maybe
+    end
+
     rule(:class_declaration) do
       class_modifier.maybe >>
       class_kw >>
       type_name >>
       extends.maybe >>
+      implements.maybe >>
       lcurly >>
       rcurly >>
       skip

@@ -136,5 +136,19 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept single interface implementation" do
+    parse(%Q{
+      class Soep implements Bowl {
+      }
+    })
+  end
+
+  it "should accept multiple interface implementation" do
+    parse(%Q{
+      class Soep implements Hot, Spicy {
+      }
+    })
+  end
+
 
 end
