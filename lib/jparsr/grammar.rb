@@ -80,20 +80,20 @@ module JParsr
 
     rule(:boolean_literal) { (true_kw | false_kw) }
 
-    rule(:char_literal) {
-      str("'") >>
-      str("\\").maybe >>
-      (str("'").absent? >> any) >>
-      str("'") >>
-      skip
-    }
+    rule(:s_quote)      { str('"') }
+    rule(:c_quote)    { str("'") }
+    rule(:s_nonquote)   { str('"').absnt? >> any }
+    rule(:c_nonquote) { str("'").absnt? >> any }
+    rule(:escape)     { str('\\') >> any }
+    rule(:string_literal) { s_quote >> (escape | s_nonquote).repeat >> s_quote }
+    rule(:char_literal) { c_quote >> (escape | c_nonquote) >> c_quote }
 
     rule(:package_name) { id >> (dot >> id).repeat.maybe }
 
     rule(:type_name)   { id }
 
     rule(:expression) do
-      (null_kw | char_literal | boolean_literal | numeric_literal)
+      (null_kw | string_literal | char_literal | boolean_literal | numeric_literal)
     end
 
 

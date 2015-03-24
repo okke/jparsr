@@ -283,5 +283,29 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept strings as a literals" do
+    parse(%Q{
+      class Soep {
+        String name  = "pea soup da luxe";
+      }
+    })
+  end
+
+  it "should accept escapes characters in strings" do
+    parse(%q{
+      class Soep {
+        String name  = "\"pea\" soup\tda\tluxe\n";
+      }
+    })
+  end
+
+  it "should accept empty strings" do
+    parse(%q{
+      class Soep {
+        String name  = "";
+      }
+    })
+  end
+
 
 end
