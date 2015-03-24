@@ -62,6 +62,7 @@ module JParsr
     rule(:double_kw)   { str('double') >> skip }
     rule(:true_kw)     { str('true') >> skip }
     rule(:false_kw)    { str('false') >> skip }
+    rule(:null_kw)     { str('null') >> skip }
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat >> skip}
 
@@ -92,7 +93,7 @@ module JParsr
     rule(:type_name)   { id }
 
     rule(:expression) do
-      (char_literal | boolean_literal | numeric_literal)
+      (null_kw | char_literal | boolean_literal | numeric_literal)
     end
 
 

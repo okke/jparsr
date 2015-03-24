@@ -275,5 +275,13 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept null as a literals" do
+    parse(%Q{
+      class Soep {
+        String name  = null;
+      }
+    })
+  end
+
 
 end
