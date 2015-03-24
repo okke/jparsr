@@ -96,8 +96,6 @@ module JParsr
       (null_kw | string_literal | char_literal | boolean_literal | numeric_literal)
     end
 
-
-
     rule(:package_declaration) do
       package_kw >>
       package_name >>

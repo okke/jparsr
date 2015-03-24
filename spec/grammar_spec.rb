@@ -30,31 +30,31 @@ end
 describe JParsr::Grammar do
 
   it "should accept an empty source file to parse" do
-    parse(%Q{
+    parse(%q{
     })
   end
 
   it "should accept a package statement" do
-    parse(%Q{
+    parse(%q{
       package soep;
     })
   end
 
   it "should accept a nested package statement" do
-    parse(%Q{
+    parse(%q{
       package com.soep.bowl;
     })
   end
 
   it "should accept an empty class" do
-    parse(%Q{
+    parse(%q{
       class Soep {
       }
     })
   end
 
   it "should accept an multple classes" do
-    parse(%Q{
+    parse(%q{
       class Soep {
       }
       class SoepBowl {
@@ -63,42 +63,42 @@ describe JParsr::Grammar do
   end
 
   it "should accept a public class" do
-    parse(%Q{
+    parse(%q{
       public class Soep {
       }
     })
   end
 
   it "should accept a public final class" do
-    parse(%Q{
+    parse(%q{
       public final class Soep {
       }
     })
   end
 
   it "should accept a final public class" do
-    parse(%Q{
+    parse(%q{
       final public class Soep {
       }
     })
   end
 
   it "should accept an abstract class" do
-    parse(%Q{
+    parse(%q{
       abstract class Soep {
       }
     })
   end
 
   it "should accept a public abstract class" do
-    parse(%Q{
+    parse(%q{
       public abstract class Soep {
       }
     })
   end
 
   it "should accept a class import" do
-    parse(%Q{
+    parse(%q{
       import Bowl;
       class Soep {
       }
@@ -106,7 +106,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept a fully qualified class import" do
-    parse(%Q{
+    parse(%q{
       import com.soup.Bowl;
       class Soep {
       }
@@ -114,7 +114,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept a wildcard package import" do
-    parse(%Q{
+    parse(%q{
       import com.soup.*;
       class Soep {
       }
@@ -122,7 +122,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept a static import" do
-    parse(%Q{
+    parse(%q{
       import static com.soup.Bowl;
       class Soep {
       }
@@ -130,28 +130,28 @@ describe JParsr::Grammar do
   end
 
   it "should accept class inheritance" do
-    parse(%Q{
+    parse(%q{
       class Soep extends Bowl {
       }
     })
   end
 
   it "should accept single interface implementation" do
-    parse(%Q{
+    parse(%q{
       class Soep implements Bowl {
       }
     })
   end
 
   it "should accept multiple interface implementation" do
-    parse(%Q{
+    parse(%q{
       class Soep implements Hot, Spicy {
       }
     })
   end
 
   it "should accept a single integer field member" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         int i;
       }
@@ -159,7 +159,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept a multiple field members" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         int i;
         int j;
@@ -168,7 +168,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept all primitive field members" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         boolean b;
         byte b2;
@@ -183,7 +183,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept field modifiers" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         public int i1;
         private int i2;
@@ -197,7 +197,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept multiple field modifiers" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         public final static int i1;
       }
@@ -205,7 +205,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept class type fields" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         Bowl bowl;
       }
@@ -213,7 +213,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept multiple field names" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         int i1, i2, i3;
       }
@@ -221,7 +221,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept a primitive field initializer" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         boolean bt = true;
         int i1 = 3;
@@ -230,7 +230,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept long decimal literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         int i = 3l;
         int j = 3L;
@@ -239,7 +239,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept hexadecimal and octal literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         int i = 0x3;
         int j = 0X3;
@@ -251,7 +251,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept floating point literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         double d = 1.2;
         double e = .2;
@@ -267,7 +267,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept character literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         char c = 'c';
         char d = '\\r';
@@ -276,7 +276,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept null as a literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         String name  = null;
       }
@@ -284,7 +284,7 @@ describe JParsr::Grammar do
   end
 
   it "should accept strings as a literals" do
-    parse(%Q{
+    parse(%q{
       class Soep {
         String name  = "pea soup da luxe";
       }
