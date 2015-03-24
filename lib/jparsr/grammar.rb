@@ -35,6 +35,8 @@ module JParsr
     rule(:semicolon)   { str(';') >> skip}
     rule(:lcurly)      { str('{') >> skip}
     rule(:rcurly)      { str('}') >> skip}
+    rule(:lparen)      { str('(') >> skip}
+    rule(:rparen)      { str(')') >> skip}
     rule(:star)        { str('*') >> skip}
     rule(:comma)       { str(',') >> skip}
     rule(:assign)      { str('=') >> skip}
@@ -135,7 +137,7 @@ module JParsr
       (primitive_type | type_name)
     end
 
-    rule(:field_modifier) do
+    rule(:member_modifier) do
       (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw)
     end 
 
@@ -147,16 +149,21 @@ module JParsr
       assign >> expression
     end
 
-    rule(:field_declaration) do
-      field_modifier.repeat.maybe >> 
+    rule(:method_declaration) do
+        lparen >> rparen >> lcurly >> rcurly
+    end
+
+    # TODO can parse multiple method names
+    #
+    rule(:member_declaration) do
+      member_modifier.repeat.maybe >> 
       member_type >> 
       field_names >> 
-      field_initializer.maybe >> 
-      semicolon
+      (method_declaration | (field_initializer.maybe >> semicolon))
     end
 
     rule(:class_body_declaration) do
-      field_declaration
+      member_declaration
     end
 
     rule(:class_declaration) do

@@ -307,5 +307,14 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept an empty method" do
+    parse(%q{
+      class Soep {
+        int boil() {
+        }
+      }
+    })
+  end
+
 
 end
