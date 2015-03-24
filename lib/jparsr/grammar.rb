@@ -133,7 +133,7 @@ module JParsr
       (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
     end
 
-    rule(:member_type) do
+    rule(:type) do
       (primitive_type | type_name)
     end
 
@@ -149,15 +149,23 @@ module JParsr
       assign >> expression
     end
 
+    rule(:method_parameters) do
+      type >> id >> (comma >> method_parameters).maybe
+    end
+
     rule(:method_declaration) do
-        lparen >> rparen >> lcurly >> rcurly
+        lparen >> 
+        method_parameters.maybe >>
+        rparen >> 
+        lcurly >> 
+        rcurly
     end
 
     # TODO can parse multiple method names
     #
     rule(:member_declaration) do
       member_modifier.repeat.maybe >> 
-      member_type >> 
+      type >> 
       field_names >> 
       (method_declaration | (field_initializer.maybe >> semicolon))
     end

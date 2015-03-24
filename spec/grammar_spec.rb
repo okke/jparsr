@@ -316,5 +316,32 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a void method" do
+    parse(%q{
+      class Soep {
+        void boil() {
+        }
+      }
+    })
+  end
+
+  it "should accept method with one parameter" do
+    parse(%q{
+      class Soep {
+        void boil(int temperature) {
+        }
+      }
+    })
+  end
+
+  it "should accept method with multiple parameters" do
+    parse(%q{
+      class Soep {
+        void boil(float temperature, long duration) {
+        }
+      }
+    })
+  end
+
 
 end
