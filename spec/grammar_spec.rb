@@ -343,5 +343,25 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept multiple methods" do
+    parse(%q{
+      class Soep {
+        void boil() {
+        }
+        void freeze() {
+        }
+      }
+    })
+  end
+
+  it "should accept a method ending with a semicolon" do
+    parse(%q{
+      class Soep {
+        int i;
+        void boil() {
+        };
+      }
+    })
+  end
 
 end

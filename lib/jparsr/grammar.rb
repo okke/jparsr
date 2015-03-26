@@ -66,7 +66,7 @@ module JParsr
     rule(:false_kw)    { str('false') >> skip }
     rule(:null_kw)     { str('null') >> skip }
 
-    rule(:id)          { match('[a-zA-Z0-9_]').repeat >> skip}
+    rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
 
     # TODO this also matches hexadecimal floating points
     #
@@ -158,7 +158,8 @@ module JParsr
         method_parameters.maybe >>
         rparen >> 
         lcurly >> 
-        rcurly
+        rcurly >>
+        semicolon.maybe
     end
 
     # TODO can parse multiple method names
@@ -171,7 +172,7 @@ module JParsr
     end
 
     rule(:class_body_declaration) do
-      member_declaration
+      member_declaration >> skip
     end
 
     rule(:class_declaration) do
