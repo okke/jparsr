@@ -37,6 +37,8 @@ module JParsr
     rule(:rcurly)      { str('}') >> skip}
     rule(:lparen)      { str('(') >> skip}
     rule(:rparen)      { str(')') >> skip}
+    rule(:lbracket)    { str('[') >> skip}
+    rule(:rbracket)    { str(']') >> skip}
     rule(:star)        { str('*') >> skip}
     rule(:comma)       { str(',') >> skip}
     rule(:assign)      { str('=') >> skip}
@@ -134,8 +136,12 @@ module JParsr
       (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
     end
 
+    rule(:array) do
+      (lbracket >> rbracket).repeat
+    end
+
     rule(:type) do
-      (primitive_type | type_name)
+      (primitive_type | type_name) >> array.maybe
     end
 
     rule(:member_modifier) do
@@ -143,7 +149,7 @@ module JParsr
     end 
 
     rule(:field_names) do
-      id >> (comma >> id).repeat.maybe
+      array.maybe >> id >> (comma >> array.maybe >> id).repeat.maybe
     end
 
     rule(:field_initializer) do

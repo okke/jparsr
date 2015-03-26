@@ -234,6 +234,31 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept an array type field" do
+    parse(%q{
+      class Soep {
+        int[] arr = null;
+      }
+    })
+  end
+
+  it "should accept an array of arrays type field" do
+    parse(%q{
+      class Soep {
+        int[][] arr = null;
+      }
+    })
+  end
+
+  it "should accept an array field by defining the fieldname as array" do
+    parse(%q{
+      class Soep {
+        int []arr = null;
+        int []arr1, []arr2 = null;
+      }
+    })
+  end
+
   it "should accept long decimal literals" do
     parse(%q{
       class Soep {
@@ -376,6 +401,8 @@ describe JParsr::Grammar do
           int i;
           String s = null;
           boolean a,b = true;
+          int[] arr = null;
+          int []arr1, []arr2;
         };
       }
     })
