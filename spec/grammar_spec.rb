@@ -24,7 +24,12 @@
 require 'spec_helper'
 
 def parse(s)
-  JParsr::Grammar.new.parse(s)
+  begin
+    JParsr::Grammar.new.parse(s)
+  rescue Parslet::ParseFailed => failure
+    puts failure.cause.ascii_tree
+    raise failure
+  end
 end
 
 describe JParsr::Grammar do
@@ -392,6 +397,34 @@ describe JParsr::Grammar do
         String boil() {
           return "hot";
         };
+      }
+    })
+  end
+
+  it "should accept a static block inside a class" do
+    parse(%q{
+      class Soep {
+        static {
+        }
+      }
+    })
+  end
+
+  it "should accept a mix of static blocks, members and methods" do
+    parse(%q{
+      class Soep {
+        public int i = 0;
+        static {
+        }
+        private static final int i = 0;
+        void boil() {
+        }
+        String s = "hot";
+        static {
+          return "return from static block?";
+        }
+        void boilAgain() {
+        }
       }
     })
   end

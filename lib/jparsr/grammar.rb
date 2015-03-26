@@ -191,8 +191,12 @@ module JParsr
       (method_declaration | (field_initializer.maybe >> semicolon))
     end
 
+    rule(:static_block) do
+      static_kw >> block
+    end
+
     rule(:class_body_declaration) do
-      member_declaration >> skip
+      (member_declaration | static_block) >> skip
     end
 
     rule(:class_declaration) do
