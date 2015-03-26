@@ -153,13 +153,24 @@ module JParsr
       type >> id >> (comma >> method_parameters).maybe
     end
 
+    rule(:local_variable) do
+      type >> 
+      field_names >>
+      field_initializer.maybe
+    end
+
+    rule(:block) do
+      lcurly >> 
+      (local_variable >> semicolon).repeat.maybe >>
+      rcurly
+    end
+
     rule(:method_declaration) do
-        lparen >> 
-        method_parameters.maybe >>
-        rparen >> 
-        lcurly >> 
-        rcurly >>
-        semicolon.maybe
+      lparen >> 
+      method_parameters.maybe >>
+      rparen >> 
+      block >>
+      semicolon.maybe
     end
 
     # TODO can parse multiple method names

@@ -364,4 +364,17 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept local method variables" do
+    parse(%q{
+      class Soep {
+        void boil() {
+          int i;
+          String s = null;
+          boolean a,b = true;
+        };
+      }
+    })
+  end
+
+
 end
