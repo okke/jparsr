@@ -376,5 +376,25 @@ describe JParsr::Grammar do
     })
   end
 
+  it "should accept a return statement" do
+    parse(%q{
+      class Soep {
+        void boil() {
+          return;
+        };
+      }
+    })
+  end
+
+  it "should accept a return expression statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          return "hot";
+        };
+      }
+    })
+  end
+
 
 end

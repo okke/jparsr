@@ -65,6 +65,7 @@ module JParsr
     rule(:true_kw)     { str('true') >> skip }
     rule(:false_kw)    { str('false') >> skip }
     rule(:null_kw)     { str('null') >> skip }
+    rule(:return_kw)   { str('return') >> skip }
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
 
@@ -159,9 +160,17 @@ module JParsr
       field_initializer.maybe
     end
 
+    rule(:return_statement) do
+      return_kw >> expression.maybe
+    end
+
+    rule(:statement) do
+      return_statement
+    end
+
     rule(:block) do
       lcurly >> 
-      (local_variable >> semicolon).repeat.maybe >>
+      ((local_variable | statement) >> semicolon).repeat.maybe >>
       rcurly
     end
 
