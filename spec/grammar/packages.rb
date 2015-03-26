@@ -21,89 +21,50 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :packages do
 
-require 'grammar/packages'
-require 'grammar/basic_class'
-require 'grammar/members'
-require 'grammar/literals'
-require 'grammar/methods'
-
-
-describe JParsr::Grammar do
-
-  it_behaves_like :packages
-  it_behaves_like :basic_class
-  it_behaves_like :members
-  it_behaves_like :literals
-  it_behaves_like :methods
-
-  it "should accept an empty source file to parse" do
+  it "should accept a package statement" do
     parse(%q{
+      package soep;
     })
   end
 
-  it "should accept local method variables" do
+  it "should accept a nested package statement" do
     parse(%q{
+      package com.soep.bowl;
+    })
+  end
+
+  it "should accept a class import" do
+    parse(%q{
+      import Bowl;
       class Soep {
-        void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
-        };
       }
     })
   end
 
-  it "should accept a return statement" do
+  it "should accept a fully qualified class import" do
     parse(%q{
+      import com.soup.Bowl;
       class Soep {
-        void boil() {
-          return;
-        };
       }
     })
   end
 
-  it "should accept a return expression statement" do
+  it "should accept a wildcard package import" do
     parse(%q{
+      import com.soup.*;
       class Soep {
-        String boil() {
-          return "hot";
-        };
       }
     })
   end
 
-  it "should accept a static block inside a class" do
+  it "should accept a static import" do
     parse(%q{
+      import static com.soup.Bowl;
       class Soep {
-        static {
-        }
       }
     })
   end
-
-  it "should accept a mix of static blocks, members and methods" do
-    parse(%q{
-      class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
-        }
-      }
-    })
-  end
-
 
 end

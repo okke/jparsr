@@ -21,89 +21,78 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :basic_class do
 
-require 'grammar/packages'
-require 'grammar/basic_class'
-require 'grammar/members'
-require 'grammar/literals'
-require 'grammar/methods'
-
-
-describe JParsr::Grammar do
-
-  it_behaves_like :packages
-  it_behaves_like :basic_class
-  it_behaves_like :members
-  it_behaves_like :literals
-  it_behaves_like :methods
-
-  it "should accept an empty source file to parse" do
-    parse(%q{
-    })
-  end
-
-  it "should accept local method variables" do
+  it "should accept an empty class" do
     parse(%q{
       class Soep {
-        void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
-        };
       }
     })
   end
 
-  it "should accept a return statement" do
+  it "should accept an multple classes" do
     parse(%q{
       class Soep {
-        void boil() {
-          return;
-        };
+      }
+      class SoepBowl {
       }
     })
   end
 
-  it "should accept a return expression statement" do
+  it "should accept a public class" do
     parse(%q{
-      class Soep {
-        String boil() {
-          return "hot";
-        };
+      public class Soep {
       }
     })
   end
 
-  it "should accept a static block inside a class" do
+  it "should accept a public final class" do
     parse(%q{
-      class Soep {
-        static {
-        }
+      public final class Soep {
       }
     })
   end
 
-  it "should accept a mix of static blocks, members and methods" do
+  it "should accept a final public class" do
     parse(%q{
-      class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
-        }
+      final public class Soep {
+      }
+    })
+  end
+
+  it "should accept an abstract class" do
+    parse(%q{
+      abstract class Soep {
+      }
+    })
+  end
+
+  it "should accept a public abstract class" do
+    parse(%q{
+      public abstract class Soep {
       }
     })
   end
 
 
+  it "should accept class inheritance" do
+    parse(%q{
+      class Soep extends Bowl {
+      }
+    })
+  end
+
+  it "should accept single interface implementation" do
+    parse(%q{
+      class Soep implements Bowl {
+      }
+    })
+  end
+
+  it "should accept multiple interface implementation" do
+    parse(%q{
+      class Soep implements Hot, Spicy {
+      }
+    })
+  end
 end

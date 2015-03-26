@@ -21,89 +21,62 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :methods do
 
-require 'grammar/packages'
-require 'grammar/basic_class'
-require 'grammar/members'
-require 'grammar/literals'
-require 'grammar/methods'
-
-
-describe JParsr::Grammar do
-
-  it_behaves_like :packages
-  it_behaves_like :basic_class
-  it_behaves_like :members
-  it_behaves_like :literals
-  it_behaves_like :methods
-
-  it "should accept an empty source file to parse" do
+  it "should accept an empty method" do
     parse(%q{
+      class Soep {
+        int boil() {
+        }
+      }
     })
   end
 
-  it "should accept local method variables" do
+  it "should accept a void method" do
     parse(%q{
       class Soep {
         void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
+        }
+      }
+    })
+  end
+
+  it "should accept method with one parameter" do
+    parse(%q{
+      class Soep {
+        void boil(int temperature) {
+        }
+      }
+    })
+  end
+
+  it "should accept method with multiple parameters" do
+    parse(%q{
+      class Soep {
+        void boil(float temperature, long duration) {
+        }
+      }
+    })
+  end
+
+  it "should accept multiple methods" do
+    parse(%q{
+      class Soep {
+        void boil() {
+        }
+        void freeze() {
+        }
+      }
+    })
+  end
+
+  it "should accept a method ending with a semicolon" do
+    parse(%q{
+      class Soep {
+        int i;
+        void boil() {
         };
       }
     })
   end
-
-  it "should accept a return statement" do
-    parse(%q{
-      class Soep {
-        void boil() {
-          return;
-        };
-      }
-    })
-  end
-
-  it "should accept a return expression statement" do
-    parse(%q{
-      class Soep {
-        String boil() {
-          return "hot";
-        };
-      }
-    })
-  end
-
-  it "should accept a static block inside a class" do
-    parse(%q{
-      class Soep {
-        static {
-        }
-      }
-    })
-  end
-
-  it "should accept a mix of static blocks, members and methods" do
-    parse(%q{
-      class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
-        }
-      }
-    })
-  end
-
-
 end
