@@ -48,4 +48,27 @@ shared_examples :comments do
     })
   end
 
+  it "should accept a comment block" do
+    parse(%q{
+      /* Soup or no Soup */
+    })
+  end
+
+  it "should accept a multi line comment block" do
+    parse(%q{
+      /* 
+        Soup or no Soup 
+        Sing you own halleluyah
+      */
+    })
+  end
+
+  it "should accept a comment block between regular code" do
+    parse(%q{
+       class /* Soup or no Soup */ Soup {
+         /* Sing your own halleluyah */ int i;
+       }
+    })
+  end
+
 end

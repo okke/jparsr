@@ -30,10 +30,12 @@ module JParsr
     rule(:space)       { match["\s\n\r"].repeat }
     rule(:space?)      { space.maybe }
 
-    rule(:line_comment){ str('//') >> (match["\n\r"].absnt? >> any).repeat}
+    rule(:line_comment) { str('//') >> (match["\n"].absnt? >> any).repeat}
+    rule(:block_comment){ str('/*') >> (str('*/').absnt? >> any).repeat >> str('*/')} 
+
 
     rule(:comment) do
-      line_comment
+      (line_comment | block_comment)
     end
 
     rule(:skip)        { space? >> (comment >> skip).maybe >> space?}
