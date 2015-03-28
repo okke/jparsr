@@ -99,9 +99,12 @@ module JParsr
 
 
     rule(:class_parameter) do
-      id >> (extends_kw >> type_name).maybe >> (comma >> class_parameter).maybe
+      type >> (extends_kw >> type_name).maybe >> (comma >> class_parameter).maybe
     end
 
+    # TODO generic type is been used for rela types and for class declaration
+    # so now it may parse class A<B<C>> {} which is not correct.
+    #
     rule(:generic_type) do
       lt >>
       class_parameter >>
@@ -208,6 +211,7 @@ module JParsr
     #
     rule(:member_declaration) do
       member_modifier.repeat.maybe >> 
+      generic_type.maybe >>
       type >> 
       field_names >> 
       (method_declaration | (field_initializer.maybe >> semicolon))

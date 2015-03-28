@@ -70,4 +70,47 @@ shared_examples :generics do
       }
     })
   end
+
+  it "should accept a generic method accepting one type parameter" do
+    parse(%q{
+      class Soep {
+        public <T> void useIngredients(List<T> ingredients) {
+        }
+      }
+    })
+  end
+
+  it "should accept a generic method accepting multiple type parameters" do
+    parse(%q{
+      class Soep {
+        public <T,S> void useIngredients(List<T> ingredients) {
+        }
+      }
+    })
+  end
+
+  it "should accept a generic method accepting type parameters with extend" do
+    parse(%q{
+      class Soep {
+        public <T,S extends T> void useIngredients(List<T> ingredients) {
+        }
+      }
+    })
+  end
+
+  it "should accept nexted generics" do
+    parse(%q{
+      class Soep {
+        List<List<String>> ingredients;  
+      }
+    })
+  end
+
+  it "should accept arrays within generic types" do
+    parse(%q{
+      class Soep {
+        List<String[]> ingredients;  
+      }
+    })
+  end
 end
