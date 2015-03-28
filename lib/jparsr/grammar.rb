@@ -42,6 +42,8 @@ module JParsr
     rule(:star)        { str('*') >> skip}
     rule(:comma)       { str(',') >> skip}
     rule(:assign)      { str('=') >> skip}
+    rule(:lt)          { str('<') >> skip}
+    rule(:gt)          { str('>') >> skip}
 
     rule(:package_kw)  { str('package') >> skip }
     rule(:public_kw)   { str('public') >> skip }
@@ -95,7 +97,21 @@ module JParsr
 
     rule(:package_name) { id >> (dot >> id).repeat.maybe }
 
-    rule(:type_name)   { id }
+
+    rule(:class_parameter) do
+      id >> (extends_kw >> type_name).maybe >> (comma >> class_parameter).maybe
+    end
+
+    rule(:generic_type) do
+      lt >>
+      class_parameter >>
+      gt
+    end
+
+    rule(:type_name)   do 
+      id >>
+      generic_type.maybe
+    end
 
     rule(:expression) do
       (null_kw | string_literal | char_literal | boolean_literal | numeric_literal)

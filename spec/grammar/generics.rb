@@ -21,91 +21,53 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :generics do
 
-require 'grammar/packages'
-require 'grammar/basic_class'
-require 'grammar/members'
-require 'grammar/literals'
-require 'grammar/methods'
-require 'grammar/generics'
-
-
-describe JParsr::Grammar do
-
-  it_behaves_like :packages
-  it_behaves_like :basic_class
-  it_behaves_like :members
-  it_behaves_like :literals
-  it_behaves_like :methods
-  it_behaves_like :generics
-
-  it "should accept an empty source file to parse" do
+  it "should accept a generic class accepting one class parameter" do
     parse(%q{
-    })
-  end
-
-  it "should accept local method variables" do
-    parse(%q{
-      class Soep {
-        void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
-        };
+      class Soep<MainIngredient> {
       }
     })
   end
 
-  it "should accept a return statement" do
+  it "should accept a generic class accepting multiple class parameters" do
     parse(%q{
-      class Soep {
-        void boil() {
-          return;
-        };
+      class Soep<Stock, MainVegatable> {
       }
     })
   end
 
-  it "should accept a return expression statement" do
+  it "should accept a generic class with parameters using the extend clause" do
     parse(%q{
-      class Soep {
-        String boil() {
-          return "hot";
-        };
+      class Soep<Stock extends Food, MainVegatable extends Food> {
       }
     })
   end
 
-  it "should accept a static block inside a class" do
+  it "should accept a generic class as type for members" do
     parse(%q{
       class Soep {
-        static {
+        List<String> ingredients;
+      }
+    })
+  end
+
+  it "should accept a generic class as type for method parameters" do
+    parse(%q{
+      class Soep {
+        public void use(List<String> ingredients) {
         }
       }
     })
   end
 
-  it "should accept a mix of static blocks, members and methods" do
+  it "should accept a generic class as type for method return values" do
     parse(%q{
       class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
+        public List<String> getIngredients() {
+
         }
       }
     })
   end
-
-
 end
