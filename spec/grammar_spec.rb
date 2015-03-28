@@ -29,6 +29,7 @@ require 'grammar/members'
 require 'grammar/literals'
 require 'grammar/methods'
 require 'grammar/generics'
+require 'grammar/comments'
 
 
 describe JParsr::Grammar do
@@ -39,6 +40,7 @@ describe JParsr::Grammar do
   it_behaves_like :literals
   it_behaves_like :methods
   it_behaves_like :generics
+  it_behaves_like :comments
 
   it "should accept an empty source file to parse" do
     parse(%q{

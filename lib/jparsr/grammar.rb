@@ -29,7 +29,14 @@ module JParsr
   class Grammar < Parslet::Parser
     rule(:space)       { match["\s\n\r"].repeat }
     rule(:space?)      { space.maybe }
-    rule(:skip)        { space? }
+
+    rule(:line_comment){ str('//') >> (match["\n\r"].absnt? >> any).repeat}
+
+    rule(:comment) do
+      line_comment
+    end
+
+    rule(:skip)        { space? >> (comment >> skip).maybe >> space?}
 
     rule(:dot)         { str('.') >> skip}
     rule(:semicolon)   { str(';') >> skip}
