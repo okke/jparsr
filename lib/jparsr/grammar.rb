@@ -225,12 +225,19 @@ module JParsr
 
     # TODO can parse multiple method names
     #
+    rule(:member_field_or_method_declaration) do
+      field_names >> 
+      (method_declaration | (field_initializer.maybe >> semicolon))
+    end
+
     rule(:member_declaration) do
       member_modifier.repeat.maybe >> 
       generic_type.maybe >>
       type >> 
-      field_names >> 
-      (method_declaration | (field_initializer.maybe >> semicolon))
+      ( 
+        method_declaration | # constructor
+        member_field_or_method_declaration
+      )
     end
 
     rule(:static_block) do

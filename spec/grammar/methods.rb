@@ -87,4 +87,25 @@ shared_examples :methods do
       }
     })
   end
+
+  it "should accept a constructor method" do
+    parse(%q{
+      class Soep {
+        Soep() {
+        }
+      }
+    })
+  end
+
+  it "should accept multiple constructor methods" do
+    parse(%q{
+      class Soep {
+        Soep() {
+        }
+        Soep(int i) {
+        }
+      }
+    })
+  end
+
 end
