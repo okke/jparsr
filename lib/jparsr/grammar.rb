@@ -64,38 +64,36 @@ module JParsr
 
 
     define_keywords([
-     :package, 
-     :public,
-     :private,
-     :protected,
-     :transient,
-     :volatile,
-     :final,
      :abstract,
-     :class,
-     :import,
-     :static,
-     :extends,
-     :implements,
-     :int,
      :boolean,
      :byte,
-     :short,
-     :long,
      :char,
-     :float,
+     :class,
      :double,
-     :true,
-     :false,
-     :null,
-     :return,
-     :interface,
      :enum,
-     :synchronized
+     :extends,
+     :false,
+     :final,
+     :float,
+     :implements,
+     :import,
+     :int,
+     :interface,
+     :long,
+     :null,
+     :package, 
+     :private,
+     :protected,
+     :public,
+     :return,
+     :short,
+     :static,
+     :synchronized,
+     :transient,
+     :true,
+     :volatile
     ])
 
-    # TODO skip all keywords
-    #
     rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
 
     # TODO this also matches hexadecimal floating points
