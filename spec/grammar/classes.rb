@@ -21,7 +21,7 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-shared_examples :basic_class do
+shared_examples :classes do
 
   it "should accept an empty class" do
     parse(%q{

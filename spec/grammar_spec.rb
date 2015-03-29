@@ -24,7 +24,7 @@
 require 'spec_helper'
 
 require 'grammar/packages'
-require 'grammar/basic_class'
+require 'grammar/classes'
 require 'grammar/members'
 require 'grammar/literals'
 require 'grammar/methods'
@@ -38,7 +38,7 @@ require 'grammar/statements'
 describe JParsr::Grammar do
 
   it_behaves_like :packages
-  it_behaves_like :basic_class
+  it_behaves_like :classes
   it_behaves_like :members
   it_behaves_like :literals
   it_behaves_like :methods
