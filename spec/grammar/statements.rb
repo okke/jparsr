@@ -21,80 +21,50 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :statements do
 
-require 'grammar/packages'
-require 'grammar/basic_class'
-require 'grammar/members'
-require 'grammar/literals'
-require 'grammar/methods'
-require 'grammar/generics'
-require 'grammar/comments'
-require 'grammar/interfaces'
-require 'grammar/enums'
-require 'grammar/statements'
-
-
-describe JParsr::Grammar do
-
-  it_behaves_like :packages
-  it_behaves_like :basic_class
-  it_behaves_like :members
-  it_behaves_like :literals
-  it_behaves_like :methods
-  it_behaves_like :generics
-  it_behaves_like :comments
-  it_behaves_like :interfaces
-  it_behaves_like :enums
-  it_behaves_like :statements
-
-  it "should accept an empty source file to parse" do
-    parse(%q{
-    })
-  end
-
-  it "should accept local method variables" do
+  it "should accept a return statement" do
     parse(%q{
       class Soep {
         void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
-        };
+          return;
+        }
       }
     })
   end
 
-
-  it "should accept a static block inside a class" do
+  it "should accept a return expression statement" do
     parse(%q{
       class Soep {
-        static {
+        String boil() {
+          return "hot";
         }
       }
     })
   end
 
-  it "should accept a mix of static blocks, members and methods" do
+  it "should accept a synchronized statement" do
     parse(%q{
       class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
+        String boil() {
+          synchronized("soep") {
+          }
         }
       }
     })
   end
 
+  it "should accept a synchronized statement within a synchronized statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          synchronized("hot") {
+            synchronized("soep") {
+            }
+          }
+        }
+      }
+    })
+  end
 
 end

@@ -129,7 +129,12 @@ module JParsr
     end
 
     rule(:expression) do
-      (null_kw | string_literal | char_literal | boolean_literal | numeric_literal)
+      (null_kw         |
+       string_literal  |
+       char_literal    |
+       boolean_literal |
+       numeric_literal
+      )
     end
 
     rule(:package_declaration) do
@@ -214,13 +219,19 @@ module JParsr
       return_kw >> expression.maybe
     end
 
-    rule(:statement) do
-      return_statement
+    rule(:synchronized_statement) do
+      synchronized_kw >> lparen >> expression >> rparen >> block
     end
 
+    rule(:statement) do
+      (synchronized_statement | return_statement)
+    end
+
+    # TODO semicolon should not be optional
+    #
     rule(:block) do
       lcurly >> 
-      ((local_variable | statement) >> semicolon).repeat.maybe >>
+      ((local_variable | statement) >> semicolon.maybe).repeat.maybe >>
       rcurly
     end
 
