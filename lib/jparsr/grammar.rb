@@ -81,6 +81,7 @@ module JParsr
     rule(:return_kw)   { str('return') >> skip }
     rule(:interface_kw){ str('interface') >> skip }
     rule(:enum_kw)     { str('enum') >> skip }
+    rule(:synchronized_kw) { str('synchronized') >> skip }
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
 
@@ -180,7 +181,15 @@ module JParsr
     end
 
     rule(:member_modifier) do
-      (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw | abstract_kw)
+      (public_kw    |
+       private_kw   |
+       protected_kw |
+       static_kw    |
+       final_kw     |
+       transient_kw |
+       volatile_kw  |
+       abstract_kw  |
+       synchronized_kw)
     end 
 
     rule(:field_names) do

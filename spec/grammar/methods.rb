@@ -88,6 +88,15 @@ shared_examples :methods do
     })
   end
 
+  it "should accept a synchronized method" do
+    parse(%q{
+      class Soep {
+        synchronized void boil() {
+        }
+      }
+    })
+  end
+
   it "should accept a constructor method" do
     parse(%q{
       class Soep {
