@@ -54,36 +54,49 @@ module JParsr
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
 
-    rule(:package_kw)  { str('package') >> skip }
-    rule(:public_kw)   { str('public') >> skip }
-    rule(:private_kw)  { str('private') >> skip }
-    rule(:protected_kw){ str('protected') >> skip }
-    rule(:transient_kw){ str('transient') >> skip }
-    rule(:volatile_kw) { str('volatile') >> skip }
-    rule(:final_kw)    { str('final') >> skip }
-    rule(:abstract_kw) { str('abstract') >> skip }
-    rule(:class_kw)    { str('class') >> skip }
-    rule(:import_kw)   { str('import') >> skip }
-    rule(:static_kw)   { str('static') >> skip }
-    rule(:extends_kw)  { str('extends') >> skip }
-    rule(:implements_kw)  { str('implements') >> skip }
-    rule(:int_kw)      { str('int') >> skip }
-    rule(:boolean_kw)  { str('boolean') >> skip }
-    rule(:byte_kw)     { str('byte') >> skip }
-    rule(:short_kw)    { str('short') >> skip }
-    rule(:long_kw)     { str('long') >> skip }
-    rule(:char_kw)     { str('char') >> skip }
-    rule(:float_kw)    { str('float') >> skip }
-    rule(:double_kw)   { str('double') >> skip }
-    rule(:true_kw)     { str('true') >> skip }
-    rule(:false_kw)    { str('false') >> skip }
-    rule(:null_kw)     { str('null') >> skip }
-    rule(:return_kw)   { str('return') >> skip }
-    rule(:interface_kw){ str('interface') >> skip }
-    rule(:enum_kw)     { str('enum') >> skip }
-    rule(:synchronized_kw) { str('synchronized') >> skip }
+    
+    def self.define_keywords(words)
+      words.each do |kw|
+        rule((kw.to_s + "_kw").to_sym) { str(kw.to_s) >> skip }
+      end
+      rule(:keyword) { match(words.map {|w| w.to_s}.join("|")) >> skip }
+    end
 
-    rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
+
+    define_keywords([
+     :package, 
+     :public,
+     :private,
+     :protected,
+     :transient,
+     :volatile,
+     :final,
+     :abstract,
+     :class,
+     :import,
+     :static,
+     :extends,
+     :implements,
+     :int,
+     :boolean,
+     :byte,
+     :short,
+     :long,
+     :char,
+     :float,
+     :double,
+     :true,
+     :false,
+     :null,
+     :return,
+     :interface,
+     :enum,
+     :synchronized
+    ])
+
+    # TODO skip all keywords
+    #
+    rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
 
     # TODO this also matches hexadecimal floating points
     #
@@ -129,7 +142,8 @@ module JParsr
     end
 
     rule(:expression) do
-      (null_kw         |
+      (id | 
+       null_kw         |
        string_literal  |
        char_literal    |
        boolean_literal |
@@ -216,7 +230,7 @@ module JParsr
     end
 
     rule(:return_statement) do
-      return_kw >> expression.maybe
+      return_kw >> expression.maybe.as(:expression)
     end
 
     rule(:synchronized_statement) do
@@ -231,7 +245,7 @@ module JParsr
     #
     rule(:block) do
       lcurly >> 
-      ((local_variable | statement) >> semicolon.maybe).repeat.maybe >>
+      ((local_variable.as(:variable) | statement.as(:statement)) >> semicolon.maybe).repeat.maybe >>
       rcurly
     end
 
@@ -317,9 +331,9 @@ module JParsr
 
     rule(:source_file) do
       skip >>
-      package_declaration.maybe >>
-      import_declaration.maybe >>
-      type_declaration.repeat.maybe
+      package_declaration.maybe.as(:package) >>
+      import_declaration.maybe.as(:imports) >>
+      type_declaration.repeat.maybe.as(:types)
     end
 
     root :source_file

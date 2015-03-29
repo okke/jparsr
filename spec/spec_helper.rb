@@ -1,8 +1,14 @@
 require 'jparsr'
+require 'pp'
 
-def parse(s)
+
+def parse(s, debug=false)
   begin
-    JParsr::Grammar.new.parse(s,reporter: Parslet::ErrorReporter::Deepest.new)
+    result = JParsr::Grammar.new.parse(s,reporter: Parslet::ErrorReporter::Deepest.new)
+    if debug
+      puts "PARSED(#{s})\n\nRESULT:\n"
+      PP.pp(result.to_hash)
+    end
   rescue Parslet::ParseFailed => failure
     puts failure.cause.ascii_tree
     raise failure

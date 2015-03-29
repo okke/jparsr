@@ -33,6 +33,7 @@ require 'grammar/comments'
 require 'grammar/interfaces'
 require 'grammar/enums'
 require 'grammar/statements'
+require 'grammar/expressions'
 
 
 describe JParsr::Grammar do
@@ -47,6 +48,7 @@ describe JParsr::Grammar do
   it_behaves_like :interfaces
   it_behaves_like :enums
   it_behaves_like :statements
+  it_behaves_like :expressions
 
   it "should accept an empty source file to parse" do
     parse(%q{
