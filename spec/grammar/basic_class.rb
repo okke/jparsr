@@ -95,4 +95,11 @@ shared_examples :basic_class do
       }
     })
   end
+
+  it "should accept an abstract class" do
+    parse(%q{
+      abstract class Soep {
+      }
+    })
+  end
 end

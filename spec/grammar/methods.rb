@@ -79,4 +79,12 @@ shared_examples :methods do
       }
     })
   end
+
+  it "should accept an abstract method" do
+    parse(%q{
+      class Soep {
+        abstract void boil();
+      }
+    })
+  end
 end

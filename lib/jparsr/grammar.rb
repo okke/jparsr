@@ -173,7 +173,7 @@ module JParsr
     end
 
     rule(:member_modifier) do
-      (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw)
+      (public_kw | private_kw | protected_kw | static_kw | final_kw | transient_kw | volatile_kw | abstract_kw)
     end 
 
     rule(:field_names) do
@@ -212,7 +212,7 @@ module JParsr
       lparen >> 
       method_parameters.maybe >>
       rparen >> 
-      block >>
+      block.maybe >>
       semicolon.maybe
     end
 
