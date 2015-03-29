@@ -80,6 +80,7 @@ module JParsr
     rule(:null_kw)     { str('null') >> skip }
     rule(:return_kw)   { str('return') >> skip }
     rule(:interface_kw){ str('interface') >> skip }
+    rule(:enum_kw)     { str('enum') >> skip }
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
 
@@ -147,7 +148,7 @@ module JParsr
       skip
     end
 
-    rule(:class_modifier) do
+    rule(:type_modifier) do
       (public_kw | final_kw | abstract_kw).repeat
     end
 
@@ -240,6 +241,14 @@ module JParsr
       (member_declaration | static_block) >> skip
     end
 
+    rule(:enum_constant) do
+      id >> (lparen >> expression >> rparen).maybe
+    end
+
+    rule(:enum_constants) do
+      enum_constant >> (comma >> enum_constant).repeat.maybe
+    end
+
     rule(:class_declaration) do
       class_kw >>
       type_name >>
@@ -263,16 +272,27 @@ module JParsr
       skip
     end
 
-    rule(:class_or_interface_declaration) do
-      class_modifier.maybe >>
-      (class_declaration | interface_declaration)
+    rule(:enum_declaration) do
+      enum_kw >>
+      type_name >>
+      implements.maybe >>
+      lcurly >>
+      enum_constants.maybe >>
+      (semicolon >> class_body_declaration.repeat.maybe).maybe >>
+      rcurly >>
+      skip
+    end
+
+    rule(:type_declaration) do
+      type_modifier.maybe >>
+      (class_declaration | interface_declaration | enum_declaration)
     end
 
     rule(:source_file) do
       skip >>
       package_declaration.maybe >>
       import_declaration.maybe >>
-      class_or_interface_declaration.repeat.maybe
+      type_declaration.repeat.maybe
     end
 
     root :source_file
