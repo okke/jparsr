@@ -79,6 +79,7 @@ module JParsr
     rule(:false_kw)    { str('false') >> skip }
     rule(:null_kw)     { str('null') >> skip }
     rule(:return_kw)   { str('return') >> skip }
+    rule(:interface_kw){ str('interface') >> skip }
 
     rule(:id)          { match('[a-zA-Z0-9_]').repeat(1) >> skip}
 
@@ -153,6 +154,11 @@ module JParsr
     rule(:extends) do
       extends_kw >>
       type_name
+    end
+
+    rule(:extends_multiple) do
+      extends_kw >>
+      type_name >> (comma >> type_name).repeat.maybe
     end
 
     rule(:implements) do
@@ -235,7 +241,6 @@ module JParsr
     end
 
     rule(:class_declaration) do
-      class_modifier.maybe >>
       class_kw >>
       type_name >>
       extends.maybe >>
@@ -246,11 +251,28 @@ module JParsr
       skip
     end
 
+    # TODO: give interfaces their own body grammar
+    #
+    rule(:interface_declaration) do
+      interface_kw >>
+      type_name >>
+      extends_multiple.maybe >>
+      lcurly >>
+      class_body_declaration.repeat.maybe >>
+      rcurly >>
+      skip
+    end
+
+    rule(:class_or_interface_declaration) do
+      class_modifier.maybe >>
+      (class_declaration | interface_declaration)
+    end
+
     rule(:source_file) do
       skip >>
       package_declaration.maybe >>
       import_declaration.maybe >>
-      class_declaration.repeat.maybe
+      class_or_interface_declaration.repeat.maybe
     end
 
     root :source_file
