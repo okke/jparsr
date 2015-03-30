@@ -23,15 +23,29 @@
 
 shared_examples :expressions do
 
-  it "should accept a simple identifier as expression" do
-    parse(%q{
-      class Soep {
-        void boil() {
-          return hot;
-        }
-      }
-    })
+  it "should accept a literal integer as expression" do
+    parse("33",:expression)
   end
 
+  it "should accept a string as expression" do
+    parse('"soup"',:expression)
+  end
+
+  it "should accept an identifier as expression" do
+    parse('soup',:expression)
+  end
+
+  it "should accept a qualified identifier as expression" do
+    tree = parse('hot.soup',:expression)
+    expect(tree[:l][:id].str).to eq "hot"
+    expect(tree[:r][:id].str).to eq "soup"
+  end
+
+  it "should accept a multiple qualifiers in expression" do
+    tree = parse('very.hot.soup',:expression, true)
+    expect(tree[:l][:l][:id].str).to eq "very"
+    expect(tree[:l][:r][:id].str).to eq "hot"
+    expect(tree[:r][:id].str).to eq "soup"
+  end
 
 end

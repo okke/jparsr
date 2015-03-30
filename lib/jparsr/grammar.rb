@@ -139,14 +139,20 @@ module JParsr
       generic_type.maybe
     end
 
-    rule(:expression) do
-      (id | 
-       null_kw         |
-       string_literal  |
-       char_literal    |
-       boolean_literal |
-       numeric_literal
+    rule(:term) do
+      (id.as(:id)                   | 
+       null_kw.as(:null)            |
+       string_literal.as(:string)   |
+       char_literal.as(:char)       |
+       boolean_literal.as(:boolean) |
+       numeric_literal.as(:number)
       )
+    end
+
+    rule(:expression) do
+      # (term.as(:left) >> dot >> expression.as(:right)) |
+      infix_expression(term, [dot, 1, :left]) |
+      term
     end
 
     rule(:package_declaration) do
