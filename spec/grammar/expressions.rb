@@ -124,4 +124,39 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:shift_right)).to be true
   end
 
+  it "should accept a relational '<' expression" do
+    tree = parse('41 < 42',:expression)
+    expect(tree[:o].has_key?(:lt)).to be true
+  end
+
+  it "should accept a relational '<=' expression" do
+    tree = parse('41 <= 42',:expression)
+    expect(tree[:o].has_key?(:lte)).to be true
+  end
+
+  it "should accept a relational '>' expression" do
+    tree = parse('41 > 42',:expression)
+    expect(tree[:o].has_key?(:gt)).to be true
+  end
+
+  it "should accept a relational '>=' expression" do
+    tree = parse('41 >= 42',:expression)
+    expect(tree[:o].has_key?(:gte)).to be true
+  end
+
+  it "should accept a relational instanceof expression" do
+    tree = parse('soep instanceof Food',:expression)
+    expect(tree[:o].has_key?(:instanceof)).to be true
+  end
+
+  it "should apply a higher precedence for shift operators than for relational operators" do
+    tree = parse('1 < 2 << 3',:expression)
+    expect(tree[:o].has_key?(:lt)).to be true
+    expect(tree[:r][:o].has_key?(:shift_left)).to be true
+
+    tree = parse('1 >> 2 > 3',:expression)
+    expect(tree[:l][:o].has_key?(:shift_right)).to be true
+    expect(tree[:o].has_key?(:gt)).to be true
+  end
+
 end

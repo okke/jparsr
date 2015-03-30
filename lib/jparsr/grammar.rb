@@ -62,6 +62,11 @@ module JParsr
     rule(:shift_left_op)  { str('<<').as(:shift_left) >> skip}
     rule(:u_shift_right_op)  { str('>>>').as(:u_shift_right) >> skip}
     rule(:shift_right_op) { (str('>>') >> str('>').absnt?).as(:shift_right) >> skip}
+    rule(:lt_op)          { (str('<') >> str('=').absnt?).as(:lt) >> skip}
+    rule(:lte_op)         { str('<=').as(:lte) >> skip}
+    rule(:gt_op)          { (str('>') >> str('=').absnt?).as(:gt) >> skip}
+    rule(:gte_op)         { str('>=').as(:gte) >> skip}
+    rule(:instanceof_op)  { instanceof_kw.as(:instanceof) >> skip}
 
     
     def self.define_keywords(words)
@@ -86,6 +91,7 @@ module JParsr
      :float,
      :implements,
      :import,
+     :instanceof,
      :int,
      :interface,
      :long,
@@ -164,7 +170,8 @@ module JParsr
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
         [(add_op | minus_op), 97, :left],
-        [(shift_left_op | shift_right_op | u_shift_right_op), 96, :left]) |
+        [(shift_left_op | shift_right_op | u_shift_right_op), 96, :left],
+        [(lt_op | lte_op | gt_op | gte_op | instanceof_op), 95, :left]) |
       term
     end
 
