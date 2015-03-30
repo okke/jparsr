@@ -93,4 +93,35 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:add)).to be true
   end
 
+  it "should accept an shift left  expression" do
+    tree = parse('8 << 1',:expression)
+    expect(tree[:l][:number].str).to eq "8"
+    expect(tree[:o].has_key?(:shift_left)).to be true
+    expect(tree[:r][:number].str).to eq "1"
+  end
+
+  it "should accept an shift right  expression" do
+    tree = parse('8 >> 1',:expression)
+    expect(tree[:l][:number].str).to eq "8"
+    expect(tree[:o].has_key?(:shift_right)).to be true
+    expect(tree[:r][:number].str).to eq "1"
+  end
+
+  it "should accept an unsigned shift right expression" do
+    tree = parse('8 >>> 1',:expression)
+    expect(tree[:l][:number].str).to eq "8"
+    expect(tree[:o].has_key?(:u_shift_right)).to be true
+    expect(tree[:r][:number].str).to eq "1"
+  end
+
+  it "should apply a higher precedence for additive operators than for shift operators" do
+    tree = parse('1 << 2 + 3',:expression)
+    expect(tree[:o].has_key?(:shift_left)).to be true
+    expect(tree[:r][:o].has_key?(:add)).to be true
+
+    tree = parse('1 - 2 >> 3',:expression)
+    expect(tree[:l][:o].has_key?(:minus)).to be true
+    expect(tree[:o].has_key?(:shift_right)).to be true
+  end
+
 end

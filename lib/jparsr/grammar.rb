@@ -59,6 +59,9 @@ module JParsr
     rule(:modulo_op)      { str('%').as(:modulo) >> skip}
     rule(:add_op)         { str('+').as(:add) >> skip}
     rule(:minus_op)       { str('-').as(:minus) >> skip}
+    rule(:shift_left_op)  { str('<<').as(:shift_left) >> skip}
+    rule(:u_shift_right_op)  { str('>>>').as(:u_shift_right) >> skip}
+    rule(:shift_right_op) { (str('>>') >> str('>').absnt?).as(:shift_right) >> skip}
 
     
     def self.define_keywords(words)
@@ -160,7 +163,8 @@ module JParsr
       infix_expression(term, 
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
-        [(add_op | minus_op), 97, :left]) |
+        [(add_op | minus_op), 97, :left],
+        [(shift_left_op | shift_right_op | u_shift_right_op), 96, :left]) |
       term
     end
 
