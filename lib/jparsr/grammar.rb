@@ -54,9 +54,11 @@ module JParsr
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
 
-    rule(:multiply)    { str('*').as(:multiply) >> skip}
-    rule(:divide)      { str('/').as(:divide) >> skip}
-    rule(:modulo)      { str('%').as(:modulo) >> skip}
+    rule(:multiply_op)    { str('*').as(:multiply) >> skip}
+    rule(:divide_op)      { str('/').as(:divide) >> skip}
+    rule(:modulo_op)      { str('%').as(:modulo) >> skip}
+    rule(:add_op)         { str('+').as(:add) >> skip}
+    rule(:minus_op)       { str('-').as(:minus) >> skip}
 
     
     def self.define_keywords(words)
@@ -155,8 +157,10 @@ module JParsr
 
     rule(:expression) do
       # (term.as(:left) >> dot >> expression.as(:right)) |
-      infix_expression(term, [dot, 99, :left]) |
-      infix_expression(term, [(multiply | divide | modulo), 98, :left]) |
+      infix_expression(term, 
+        [dot, 99, :left],
+        [(multiply_op | divide_op | modulo_op), 98, :left],
+        [(add_op | minus_op), 97, :left]) |
       term
     end
 

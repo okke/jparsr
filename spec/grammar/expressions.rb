@@ -49,24 +49,48 @@ shared_examples :expressions do
   end
 
   it "should accept a multiplicative '*' expression" do
-    tree = parse('3*5',:expression,true)
+    tree = parse('3*5',:expression)
     expect(tree[:l][:number].str).to eq "3"
     expect(tree[:o].has_key?(:multiply)).to be true
     expect(tree[:r][:number].str).to eq "5"
   end
 
   it "should accept a multiplicative '/' expression" do
-    tree = parse('10/2',:expression,true)
+    tree = parse('10/2',:expression)
     expect(tree[:l][:number].str).to eq "10"
     expect(tree[:o].has_key?(:divide)).to be true
     expect(tree[:r][:number].str).to eq "2"
   end
 
   it "should accept a multiplicative '%' expression" do
-    tree = parse('10 % 2',:expression,true)
+    tree = parse('10 % 2',:expression)
     expect(tree[:l][:number].str).to eq "10"
     expect(tree[:o].has_key?(:modulo)).to be true
     expect(tree[:r][:number].str).to eq "2"
+  end
+
+  it "should accept an additive '+' expression" do
+    tree = parse('8 + 4',:expression)
+    expect(tree[:l][:number].str).to eq "8"
+    expect(tree[:o].has_key?(:add)).to be true
+    expect(tree[:r][:number].str).to eq "4"
+  end
+
+  it "should accept an additive '-' expression" do
+    tree = parse('8 - 4',:expression)
+    expect(tree[:l][:number].str).to eq "8"
+    expect(tree[:o].has_key?(:minus)).to be true
+    expect(tree[:r][:number].str).to eq "4"
+  end
+
+  it "should apply a higher precedence for multplicative operators than for additive operators" do
+    tree = parse('1 + 2 * 3',:expression)
+    expect(tree[:o].has_key?(:add)).to be true
+    expect(tree[:r][:o].has_key?(:multiply)).to be true
+
+    tree = parse('1 * 2 + 3',:expression)
+    expect(tree[:l][:o].has_key?(:multiply)).to be true
+    expect(tree[:o].has_key?(:add)).to be true
   end
 
 end
