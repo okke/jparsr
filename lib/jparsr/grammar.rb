@@ -54,6 +54,10 @@ module JParsr
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
 
+    rule(:multiply)    { str('*').as(:multiply) >> skip}
+    rule(:divide)      { str('/').as(:divide) >> skip}
+    rule(:modulo)      { str('%').as(:modulo) >> skip}
+
     
     def self.define_keywords(words)
       words.each do |kw|
@@ -99,12 +103,12 @@ module JParsr
     # TODO this also matches hexadecimal floating points
     #
     rule(:numeric_literal) { 
-      str('0x').maybe >> 
+      (str('0x').maybe >> 
       str('0X').maybe >> 
       match('[0-9]').repeat >> 
       (str('.') >> match('[0-9]').repeat).maybe >> 
       (match('[eE]') >> match('[+-]').maybe >> match('[0-9]').repeat).maybe >> 
-      match('[lLdDfF]').maybe >> 
+      match('[lLdDfF]').maybe).as(:number) >> 
       skip
     }
 
@@ -145,13 +149,14 @@ module JParsr
        string_literal.as(:string)   |
        char_literal.as(:char)       |
        boolean_literal.as(:boolean) |
-       numeric_literal.as(:number)
+       numeric_literal
       )
     end
 
     rule(:expression) do
       # (term.as(:left) >> dot >> expression.as(:right)) |
-      infix_expression(term, [dot, 1, :left]) |
+      infix_expression(term, [dot, 99, :left]) |
+      infix_expression(term, [(multiply | divide | modulo), 98, :left]) |
       term
     end
 

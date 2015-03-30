@@ -42,10 +42,31 @@ shared_examples :expressions do
   end
 
   it "should accept a multiple qualifiers in expression" do
-    tree = parse('very.hot.soup',:expression, true)
+    tree = parse('very.hot.soup',:expression)
     expect(tree[:l][:l][:id].str).to eq "very"
     expect(tree[:l][:r][:id].str).to eq "hot"
     expect(tree[:r][:id].str).to eq "soup"
+  end
+
+  it "should accept a multiplicative '*' expression" do
+    tree = parse('3*5',:expression,true)
+    expect(tree[:l][:number].str).to eq "3"
+    expect(tree[:o].has_key?(:multiply)).to be true
+    expect(tree[:r][:number].str).to eq "5"
+  end
+
+  it "should accept a multiplicative '/' expression" do
+    tree = parse('10/2',:expression,true)
+    expect(tree[:l][:number].str).to eq "10"
+    expect(tree[:o].has_key?(:divide)).to be true
+    expect(tree[:r][:number].str).to eq "2"
+  end
+
+  it "should accept a multiplicative '%' expression" do
+    tree = parse('10 % 2',:expression,true)
+    expect(tree[:l][:number].str).to eq "10"
+    expect(tree[:o].has_key?(:modulo)).to be true
+    expect(tree[:r][:number].str).to eq "2"
   end
 
 end
