@@ -179,4 +179,50 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:ne)).to be true
   end
 
+  it "should accept a bitwise '&' expression" do
+    tree = parse('41 & 42',:expression)
+    expect(tree[:o].has_key?(:bw_and)).to be true
+  end
+
+  it "should apply a higher precedence for equality operators than for a bitwise and" do
+    tree = parse('1 & 2 == 3',:expression)
+    expect(tree[:o].has_key?(:bw_and)).to be true
+    expect(tree[:r][:o].has_key?(:eq)).to be true
+
+    tree = parse('1 != 2 & 3',:expression)
+    expect(tree[:l][:o].has_key?(:ne)).to be true
+    expect(tree[:o].has_key?(:bw_and)).to be true
+  end
+
+  it "should accept a bitwise '^' expression" do
+    tree = parse('41 ^ 42',:expression)
+    expect(tree[:o].has_key?(:bw_xor)).to be true
+  end
+
+  it "should apply a higher precedence for a bitwise and than a bitwise xor" do
+    tree = parse('1 ^ 2 & 3',:expression)
+    expect(tree[:o].has_key?(:bw_xor)).to be true
+    expect(tree[:r][:o].has_key?(:bw_and)).to be true
+
+    tree = parse('1 & 2 ^ 3',:expression)
+    expect(tree[:l][:o].has_key?(:bw_and)).to be true
+    expect(tree[:o].has_key?(:bw_xor)).to be true
+  end
+
+  it "should accept a bitwise '|' expression" do
+    tree = parse('41 | 42',:expression)
+    expect(tree[:o].has_key?(:bw_or)).to be true
+  end
+
+  it "should apply a higher precedence for a bitwise xor than a bitwise or" do
+    tree = parse('1 | 2 ^ 3',:expression)
+    expect(tree[:o].has_key?(:bw_or)).to be true
+    expect(tree[:r][:o].has_key?(:bw_xor)).to be true
+
+    tree = parse('1 ^ 2 | 3',:expression)
+    expect(tree[:l][:o].has_key?(:bw_xor)).to be true
+    expect(tree[:o].has_key?(:bw_or)).to be true
+  end
+
+
 end

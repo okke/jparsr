@@ -69,6 +69,9 @@ module JParsr
     rule(:instanceof_op)  { instanceof_kw.as(:instanceof) >> skip}
     rule(:eq_op)          { str('==').as(:eq) >> skip}
     rule(:ne_op)          { str('!=').as(:ne) >> skip}
+    rule(:bw_and_op)      { str('&').as(:bw_and) >> skip}
+    rule(:bw_xor_op)      { str('^').as(:bw_xor) >> skip}
+    rule(:bw_or_op)       { str('|').as(:bw_or) >> skip}
 
     
     def self.define_keywords(words)
@@ -174,7 +177,10 @@ module JParsr
         [(add_op | minus_op), 97, :left],
         [(shift_left_op | shift_right_op | u_shift_right_op), 96, :left],
         [(lt_op | lte_op | gt_op | gte_op | instanceof_op), 95, :left],
-        [(eq_op | ne_op), 94, :left]) |
+        [(eq_op | ne_op), 94, :left],
+        [bw_and_op, 93, :left],
+        [bw_xor_op, 92, :left],
+        [bw_or_op, 91, :left]) |
       term
     end
 
