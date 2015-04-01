@@ -254,5 +254,20 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:or)).to be true
   end
 
+  it "should accept a conditional '?' expression" do
+    tree = parse('false ? true : false',:expression)
+    expect(tree[:cnd][:boolean].has_key?(:false)).to be true
+    expect(tree[:true][:boolean].has_key?(:true)).to be true
+    expect(tree[:false][:boolean].has_key?(:false)).to be true
+  end
+
+  it "should apply a higher precendence for a conditional or than a conditional '?' expression" do
+    tree = parse('true || false ? true : false',:expression)
+    expect(tree[:cnd][:o].has_key?(:or)).to be true
+
+    tree = parse('false ? true : false || true',:expression)
+    expect(tree[:false][:o].has_key?(:or)).to be true
+  end
+
 
 end

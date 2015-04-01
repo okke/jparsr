@@ -74,6 +74,8 @@ module JParsr
     rule(:bw_or_op)       { (str('|') >> str('|').absnt?).as(:bw_or) >> skip}
     rule(:and_op)         { str('&&').as(:and) >> skip}
     rule(:or_op)          { str('||').as(:or) >> skip}
+    rule(:if_op)          { str('?') >> skip}
+    rule(:else_op)        { str(':') >> skip}
 
     
     def self.define_keywords(words)
@@ -130,7 +132,7 @@ module JParsr
       skip
     }
 
-    rule(:boolean_literal) { (true_kw | false_kw) }
+    rule(:boolean_literal) { (true_kw.as(:true) | false_kw.as(:false)) }
 
     rule(:s_quote)      { str('"') }
     rule(:c_quote)    { str("'") }
@@ -171,8 +173,15 @@ module JParsr
       )
     end
 
-    rule(:expression) do
-      # (term.as(:left) >> dot >> expression.as(:right)) |
+    rule(:cnd_if_expression) do
+      (infix_j_expression.as(:cnd) >> 
+       if_op >> 
+       infix_j_expression.as(:true) >> 
+       else_op >> 
+       infix_j_expression.as(:false)) | infix_j_expression
+    end
+
+    rule(:infix_j_expression) do
       infix_expression(term, 
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
@@ -184,8 +193,11 @@ module JParsr
         [bw_xor_op, 92, :left],
         [bw_or_op, 91, :left],
         [and_op, 90, :left],
-        [or_op, 89, :left]) |
-      term
+        [or_op, 89, :left]) | term
+    end
+
+    rule(:expression) do
+      cnd_if_expression
     end
 
     rule(:package_declaration) do
