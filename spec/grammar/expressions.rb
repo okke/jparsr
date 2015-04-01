@@ -159,4 +159,24 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:gt)).to be true
   end
 
+  it "should accept a equality '==' expression" do
+    tree = parse('41 == 42',:expression)
+    expect(tree[:o].has_key?(:eq)).to be true
+  end
+
+  it "should accept a equality '!=' expression" do
+    tree = parse('41 != 42',:expression)
+    expect(tree[:o].has_key?(:ne)).to be true
+  end
+
+  it "should apply a higher precedence for relational operators than for equality operators" do
+    tree = parse('1 == 2 < 3',:expression)
+    expect(tree[:o].has_key?(:eq)).to be true
+    expect(tree[:r][:o].has_key?(:lt)).to be true
+
+    tree = parse('1 > 2 != 3',:expression)
+    expect(tree[:l][:o].has_key?(:gt)).to be true
+    expect(tree[:o].has_key?(:ne)).to be true
+  end
+
 end

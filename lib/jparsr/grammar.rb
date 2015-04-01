@@ -67,6 +67,8 @@ module JParsr
     rule(:gt_op)          { (str('>') >> str('=').absnt?).as(:gt) >> skip}
     rule(:gte_op)         { str('>=').as(:gte) >> skip}
     rule(:instanceof_op)  { instanceof_kw.as(:instanceof) >> skip}
+    rule(:eq_op)          { str('==').as(:eq) >> skip}
+    rule(:ne_op)          { str('!=').as(:ne) >> skip}
 
     
     def self.define_keywords(words)
@@ -171,7 +173,8 @@ module JParsr
         [(multiply_op | divide_op | modulo_op), 98, :left],
         [(add_op | minus_op), 97, :left],
         [(shift_left_op | shift_right_op | u_shift_right_op), 96, :left],
-        [(lt_op | lte_op | gt_op | gte_op | instanceof_op), 95, :left]) |
+        [(lt_op | lte_op | gt_op | gte_op | instanceof_op), 95, :left],
+        [(eq_op | ne_op), 94, :left]) |
       term
     end
 
