@@ -269,5 +269,30 @@ shared_examples :expressions do
     expect(tree[:false][:o].has_key?(:or)).to be true
   end
 
+  it "should accept a '=' assignment expression" do
+    tree = parse('a=b',:expression, true)
+    expect(tree[:o].has_key?(:assign_to)).to be true
+  end
+
+  it "should accept a multi field '=' assignment expression" do
+    tree = parse('a.b = c',:expression, true)
+    expect(tree[:o].has_key?(:assign_to)).to be true
+  end
+
+  it "should accept an array '=' assignment expression" do
+    tree = parse('a.b[3] = c',:expression, true)
+    expect(tree[:o].has_key?(:assign_to)).to be true
+  end
+
+  it "should accept an multi array '=' assignment expression" do
+    tree = parse('a.b[3][4] = c',:expression, true)
+    expect(tree[:o].has_key?(:assign_to)).to be true
+  end
+
+  it "should accept a multi array in combination with field access '=' assignment expression" do
+    tree = parse('a.b[3][4].d[5] = c',:expression, true)
+    expect(tree[:o].has_key?(:assign_to)).to be true
+  end
+
 
 end

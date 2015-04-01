@@ -76,6 +76,7 @@ module JParsr
     rule(:or_op)          { str('||').as(:or) >> skip}
     rule(:if_op)          { str('?') >> skip}
     rule(:else_op)        { str(':') >> skip}
+    rule(:assign_op)      { str('=').as(:assign_to) >> skip}
 
     
     def self.define_keywords(words)
@@ -170,15 +171,7 @@ module JParsr
        char_literal.as(:char)       |
        boolean_literal.as(:boolean) |
        numeric_literal
-      )
-    end
-
-    rule(:cnd_if_expression) do
-      (infix_j_expression.as(:cnd) >> 
-       if_op >> 
-       infix_j_expression.as(:true) >> 
-       else_op >> 
-       infix_j_expression.as(:false)) | infix_j_expression
+      ) >> (lbracket >> expression.as(:index) >> rbracket).repeat.maybe
     end
 
     rule(:infix_j_expression) do
@@ -196,8 +189,24 @@ module JParsr
         [or_op, 89, :left]) | term
     end
 
+
+    rule(:cnd_if_expression) do
+      (infix_j_expression.as(:cnd) >> 
+       if_op >> 
+       infix_j_expression.as(:true) >> 
+       else_op >> 
+       infix_j_expression.as(:false)) | infix_j_expression
+    end
+
+    rule(:assignment_expression) do
+      (cnd_if_expression.as(:l) >> 
+       (assign_op).as(:o) >> 
+       assignment_expression.as(:r) ) | cnd_if_expression
+    end
+
+
     rule(:expression) do
-      cnd_if_expression
+      assignment_expression
     end
 
     rule(:package_declaration) do
