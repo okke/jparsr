@@ -224,5 +224,35 @@ shared_examples :expressions do
     expect(tree[:o].has_key?(:bw_or)).to be true
   end
 
+  it "should accept a conditional '&&' expression" do
+    tree = parse('true && false',:expression)
+    expect(tree[:o].has_key?(:and)).to be true
+  end
+
+  it "should apply a higher precedence for a bitwise or than a conditional and" do
+    tree = parse('1 && 2 | 3',:expression)
+    expect(tree[:o].has_key?(:and)).to be true
+    expect(tree[:r][:o].has_key?(:bw_or)).to be true
+
+    tree = parse('1 | 2 && 3',:expression)
+    expect(tree[:l][:o].has_key?(:bw_or)).to be true
+    expect(tree[:o].has_key?(:and)).to be true
+  end
+
+  it "should accept a conditional '||' expression" do
+    tree = parse('true || false',:expression)
+    expect(tree[:o].has_key?(:or)).to be true
+  end
+
+  it "should apply a higher precedence for a conditional and than a conditional or" do
+    tree = parse('1 || 2 && 3',:expression)
+    expect(tree[:o].has_key?(:or)).to be true
+    expect(tree[:r][:o].has_key?(:and)).to be true
+
+    tree = parse('1 && 2 || 3',:expression)
+    expect(tree[:l][:o].has_key?(:and)).to be true
+    expect(tree[:o].has_key?(:or)).to be true
+  end
+
 
 end
