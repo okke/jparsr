@@ -270,29 +270,39 @@ shared_examples :expressions do
   end
 
   it "should accept a '=' assignment expression" do
-    tree = parse('a=b',:expression, true)
+    tree = parse('a=b',:expression)
     expect(tree[:o].has_key?(:assign_to)).to be true
   end
 
   it "should accept a multi field '=' assignment expression" do
-    tree = parse('a.b = c',:expression, true)
+    tree = parse('a.b = c',:expression)
     expect(tree[:o].has_key?(:assign_to)).to be true
   end
 
   it "should accept an array '=' assignment expression" do
-    tree = parse('a.b[3] = c',:expression, true)
+    tree = parse('a.b[3] = c',:expression)
     expect(tree[:o].has_key?(:assign_to)).to be true
   end
 
   it "should accept an multi array '=' assignment expression" do
-    tree = parse('a.b[3][4] = c',:expression, true)
+    tree = parse('a.b[3][4] = c',:expression)
     expect(tree[:o].has_key?(:assign_to)).to be true
   end
 
   it "should accept a multi array in combination with field access '=' assignment expression" do
-    tree = parse('a.b[3][4].d[5] = c',:expression, true)
+    tree = parse('a.b[3][4].d[5] = c',:expression)
     expect(tree[:o].has_key?(:assign_to)).to be true
   end
 
+  it "should accept a parenthesized expressions" do
+    tree = parse('(1+2)',:expression)
+    expect(tree[:o].has_key?(:add)).to be true
+  end
+
+  it "should accept a parenthesized expression within an expression" do
+    tree = parse('(1 + 2 ) * 3',:expression)
+    expect(tree[:o].has_key?(:multiply)).to be true
+    expect(tree[:l][:o].has_key?(:add)).to be true
+  end
 
 end

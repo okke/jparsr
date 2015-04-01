@@ -165,12 +165,13 @@ module JParsr
     end
 
     rule(:term) do
-      (id.as(:id)                   | 
+      ((lparen >> expression >> rparen) |
+       id.as(:id)                   | 
        null_kw.as(:null)            |
        string_literal.as(:string)   |
        char_literal.as(:char)       |
        boolean_literal.as(:boolean) |
-       numeric_literal
+       numeric_literal              
       ) >> (lbracket >> expression.as(:index) >> rbracket).repeat.maybe
     end
 
