@@ -366,4 +366,63 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept unary add assignment expression" do
+    parse('++a',:expression) do |tree|
+      expect(tree[:o].has_key?(:add_add)).to be true
+    end
+  end
+
+  it "should accept unary add expression" do
+    # will not fail because empty is a valid expression due to
+    # current number rule
+    #
+    parse('+a',:expression) do |tree|
+      expect(tree[:o].has_key?(:add)).to be true
+    end
+  end
+
+
+  it "should accept unary minus asignment expression" do
+    parse('--a',:expression) do |tree|
+      expect(tree[:o].has_key?(:minus_minus)).to be true
+    end
+  end
+
+  it "should accept unary minus expression" do
+    # will not fail because empty is a valid expression due to
+    # current number rule
+    #
+    parse('-a',:expression) do |tree|
+      expect(tree[:o].has_key?(:minus)).to be true
+    end
+  end
+
+  it "should accept a postfix add and an unary add assignment inside an expression" do
+    parse('a++ + ++a',:expression) do |tree|
+      expect(tree[:o].has_key?(:add)).to be true
+      expect(tree[:l][:o].has_key?(:add_add)).to be true
+      expect(tree[:r][:o].has_key?(:add_add)).to be true
+    end
+  end
+
+  it "should accept a postfix add, a regular add and an unary add assignment inside an expression" do
+    parse('a+++ ++a',:expression) do |tree|
+      expect(tree[:o].has_key?(:add)).to be true
+      expect(tree[:l][:o].has_key?(:add_add)).to be true
+      expect(tree[:r][:o].has_key?(:add_add)).to be true
+    end
+  end
+
+  it "should accept unary not expression" do
+    parse('!true',:expression) do |tree|
+      expect(tree[:o].has_key?(:not)).to be true
+    end
+  end
+
+  it "should accept unary bitwise complement expression" do
+    parse('~x',:expression) do |tree|
+      expect(tree[:o].has_key?(:bw_complement)).to be true
+    end
+  end
+
 end

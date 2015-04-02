@@ -96,6 +96,9 @@ module JParsr
     rule(:add_add_op)     { str('++').as(:add_add) >> skip}
     rule(:minus_minus_op) { str('--').as(:minus_minus) >> skip}
 
+    rule(:not_op)         { (str('!') >> str('=').absnt?).as(:not) >> skip}
+    rule(:bw_complement_op) { str('~').as(:bw_complement) >> skip}
+
     
     def self.define_keywords(words)
       words.each do |kw|
@@ -204,9 +207,16 @@ module JParsr
      term >> (add_add_op | minus_minus_op).as(:o).maybe
     end
 
+    rule(:unary_expression) do
+      ((add_add_op     |
+        minus_minus_op |
+        not_op         |
+        bw_complement_op).as(:o) >> postfix_expression) |
+      postfix_expression 
+    end
 
     rule(:infix_j_expression) do
-      infix_expression(postfix_expression, 
+      infix_expression(unary_expression, 
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
         [(add_op | minus_op), 97, :left],
@@ -217,7 +227,7 @@ module JParsr
         [bw_xor_op, 92, :left],
         [bw_or_op, 91, :left],
         [and_op, 90, :left],
-        [or_op, 89, :left]) | postfix_expression
+        [or_op, 89, :left]) | unary_expression
     end
 
 
