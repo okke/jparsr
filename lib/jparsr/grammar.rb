@@ -179,6 +179,10 @@ module JParsr
       generic_type.maybe
     end
 
+    rule(:arguments) do
+      expression >> (comma >> expression).repeat.maybe
+    end
+
     rule(:term) do
       ((lparen >> expression >> rparen) |
        id.as(:id)                   | 
@@ -187,7 +191,9 @@ module JParsr
        char_literal.as(:char)       |
        boolean_literal.as(:boolean) |
        numeric_literal              
-      ) >> (lbracket >> expression.as(:index) >> rbracket).repeat.maybe
+      ) >> 
+      (lparen >> arguments.as(:arguments).maybe >> rparen).maybe >>
+      (lbracket >> expression.as(:index) >> rbracket).repeat.maybe
     end
 
     rule(:infix_j_expression) do

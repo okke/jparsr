@@ -320,4 +320,20 @@ shared_examples :expressions do
     expect(tree[:l][:o].has_key?(:add)).to be true
   end
 
+  it "should accept a method invocation without arguments as an expression" do
+    tree = parse('boil()',:expression)
+  end
+
+  it "should accept a method invocation with one argument as an expression" do
+    tree = parse('boil(95)',:expression, true)
+  end
+
+  it "should accept a method invocation with muitple arguments as an expression" do
+    tree = parse('boil(95,"salt")',:expression, true)
+  end
+
+  it "should accept a method invocation on an object with muitple arguments contaning complex expressions as an expression" do
+    tree = parse('this.use("stock").boil((c * 1.8f)+32,"salt")',:expression, true)
+  end
+
 end
