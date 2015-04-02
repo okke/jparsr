@@ -54,29 +54,44 @@ module JParsr
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
 
-    rule(:multiply_op)    { str('*').as(:multiply) >> skip}
-    rule(:divide_op)      { str('/').as(:divide) >> skip}
-    rule(:modulo_op)      { str('%').as(:modulo) >> skip}
-    rule(:add_op)         { str('+').as(:add) >> skip}
-    rule(:minus_op)       { str('-').as(:minus) >> skip}
-    rule(:shift_left_op)  { str('<<').as(:shift_left) >> skip}
-    rule(:u_shift_right_op)  { str('>>>').as(:u_shift_right) >> skip}
-    rule(:shift_right_op) { (str('>>') >> str('>').absnt?).as(:shift_right) >> skip}
-    rule(:lt_op)          { (str('<') >> str('=').absnt?).as(:lt) >> skip}
+
+    rule(:multiply_op)    { (str('*') >> str('=').absnt?).as(:multiply) >> skip}
+    rule(:divide_op)      { (str('/') >> str('=').absnt?).as(:divide) >> skip}
+    rule(:modulo_op)      { (str('%') >> str('=').absnt?).as(:modulo) >> skip}
+    rule(:add_op)         { (str('+') >> str('=').absnt?).as(:add) >> skip}
+    rule(:minus_op)       { (str('-') >> str('=').absnt?).as(:minus) >> skip}
+    rule(:shift_left_op)  { (str('<<') >> str('=').absnt?).as(:shift_left) >> skip}
+    rule(:u_shift_right_op) { (str('>>>') >> str('=').absnt?).as(:u_shift_right) >> skip}
+    rule(:shift_right_op) { (str('>>') >> match('[>=]').absnt?).as(:shift_right) >> skip}
+
+    rule(:multiply_assign_op)  { str('*=').as(:multiply_assign_to) >> skip}
+    rule(:divide_assign_op)  { str('/=').as(:divide_assign_to) >> skip}
+    rule(:modulo_assign_op)  { str('%=').as(:modulo_assign_to) >> skip}
+    rule(:add_assign_op)  { str('+=').as(:add_assign_to) >> skip}
+    rule(:minus_assign_op)  { str('-=').as(:minus_assign_to) >> skip}
+    rule(:shift_left_assign_op)  { str('<<=').as(:shift_left_assign_to) >> skip}
+    rule(:shift_right_assign_op)  { str('>>=').as(:shift_right_assign_to) >> skip}
+    rule(:u_shift_right_assign_op)  { str('>>>=').as(:u_shift_right_assign_to) >> skip}
+    rule(:bw_and_assign_op) { str('&=').as(:bw_and_assign_to) >> skip}
+    rule(:bw_xor_assign_op) { str('^=').as(:bw_xor_assign_to) >> skip}
+    rule(:bw_or_assign_op)  { str('|=').as(:bw_or_assign_to) >> skip}
+
+    rule(:assign_op)      { str('=').as(:assign_to) >> skip}
+
+    rule(:lt_op)          { (str('<') >> match('[<=]').absnt?).as(:lt) >> skip}
     rule(:lte_op)         { str('<=').as(:lte) >> skip}
-    rule(:gt_op)          { (str('>') >> str('=').absnt?).as(:gt) >> skip}
+    rule(:gt_op)          { (str('>') >> match('[>=]').absnt?).as(:gt) >> skip}
     rule(:gte_op)         { str('>=').as(:gte) >> skip}
     rule(:instanceof_op)  { instanceof_kw.as(:instanceof) >> skip}
     rule(:eq_op)          { str('==').as(:eq) >> skip}
     rule(:ne_op)          { str('!=').as(:ne) >> skip}
-    rule(:bw_and_op)      { (str('&') >> str('&').absnt?).as(:bw_and) >> skip}
-    rule(:bw_xor_op)      { str('^').as(:bw_xor) >> skip}
-    rule(:bw_or_op)       { (str('|') >> str('|').absnt?).as(:bw_or) >> skip}
+    rule(:bw_and_op)      { (str('&') >> match('[&=]').absnt?).as(:bw_and) >> skip}
+    rule(:bw_xor_op)      { (str('^') >> str('=').absnt?).as(:bw_xor) >> skip}
+    rule(:bw_or_op)       { (str('|') >> match('[|=]').absnt?).as(:bw_or) >> skip}
     rule(:and_op)         { str('&&').as(:and) >> skip}
     rule(:or_op)          { str('||').as(:or) >> skip}
     rule(:if_op)          { str('?') >> skip}
     rule(:else_op)        { str(':') >> skip}
-    rule(:assign_op)      { str('=').as(:assign_to) >> skip}
 
     
     def self.define_keywords(words)
@@ -201,7 +216,18 @@ module JParsr
 
     rule(:assignment_expression) do
       (cnd_if_expression.as(:l) >> 
-       (assign_op).as(:o) >> 
+       (assign_op               |
+        add_assign_op           | 
+        minus_assign_op         |
+        multiply_assign_op      |
+        divide_assign_op        |
+        modulo_assign_op        |
+        shift_left_assign_op    |
+        shift_right_assign_op   |
+        u_shift_right_assign_op |
+        bw_and_assign_op        |
+        bw_xor_assign_op        |
+        bw_or_assign_op).as(:o) >> 
        assignment_expression.as(:r) ) | cnd_if_expression
     end
 
