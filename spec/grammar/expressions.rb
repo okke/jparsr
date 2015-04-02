@@ -325,19 +325,45 @@ shared_examples :expressions do
   end
 
   it "should accept a method invocation with one argument as an expression" do
-    tree = parse('boil(95)',:expression, true)
+    tree = parse('boil(95)',:expression)
   end
 
   it "should accept a method invocation with muitple arguments as an expression" do
-    tree = parse('boil(95,"salt")',:expression, true)
+    tree = parse('boil(95,"salt")',:expression)
   end
 
   it "should accept a method invocation on an object with muitple arguments contaning complex expressions as an expression" do
-    tree = parse('this.use("stock").boil((c * 1.8f)+32,"salt")',:expression, true)
+    tree = parse('this.use("stock").boil((c * 1.8f)+32,"salt")',:expression)
   end
 
   it "should accept a method invocation on an array element as an expression" do
-    tree = parse('soups[3].boil()',:expression, true)
+    tree = parse('soups[3].boil()',:expression)
+  end
+
+  it "should accept a postfix add expression" do
+    parse('a++',:expression) do |tree|
+      expect(tree[:o].has_key?(:add_add)).to be true
+    end
+  end
+
+  it "should accept a postfix minus expression" do
+    parse('a--',:expression) do |tree|
+      expect(tree[:o].has_key?(:minus_minus)).to be true
+    end
+  end
+
+  it "should accept a postfix add expression inside an expression without spaces" do
+    parse('a+++3',:expression) do |tree|
+      expect(tree[:o].has_key?(:add)).to be true
+      expect(tree[:l][:o].has_key?(:add_add)).to be true
+    end
+  end
+
+  it "should accept a postfix minus expression inside an expression without spaces" do
+    parse('a---3',:expression) do |tree|
+      expect(tree[:o].has_key?(:minus)).to be true
+      expect(tree[:l][:o].has_key?(:minus_minus)).to be true
+    end
   end
 
 end

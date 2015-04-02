@@ -58,8 +58,8 @@ module JParsr
     rule(:multiply_op)    { (str('*') >> str('=').absnt?).as(:multiply) >> skip}
     rule(:divide_op)      { (str('/') >> str('=').absnt?).as(:divide) >> skip}
     rule(:modulo_op)      { (str('%') >> str('=').absnt?).as(:modulo) >> skip}
-    rule(:add_op)         { (str('+') >> str('=').absnt?).as(:add) >> skip}
-    rule(:minus_op)       { (str('-') >> str('=').absnt?).as(:minus) >> skip}
+    rule(:add_op)         { (str('+') >> match('[+=]').absnt?).as(:add) >> skip}
+    rule(:minus_op)       { (str('-') >> match('[-=]').absnt?).as(:minus) >> skip}
     rule(:shift_left_op)  { (str('<<') >> str('=').absnt?).as(:shift_left) >> skip}
     rule(:u_shift_right_op) { (str('>>>') >> str('=').absnt?).as(:u_shift_right) >> skip}
     rule(:shift_right_op) { (str('>>') >> match('[>=]').absnt?).as(:shift_right) >> skip}
@@ -92,6 +92,9 @@ module JParsr
     rule(:or_op)          { str('||').as(:or) >> skip}
     rule(:if_op)          { str('?') >> skip}
     rule(:else_op)        { str(':') >> skip}
+
+    rule(:add_add_op)     { str('++').as(:add_add) >> skip}
+    rule(:minus_minus_op) { str('--').as(:minus_minus) >> skip}
 
     
     def self.define_keywords(words)
@@ -137,6 +140,7 @@ module JParsr
     rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
 
     # TODO this also matches hexadecimal floating points
+    # TODO this will match an empty string
     #
     rule(:numeric_literal) { 
       (str('0x').maybe >> 
@@ -196,8 +200,13 @@ module JParsr
       (lbracket >> expression.as(:index) >> rbracket).repeat.maybe
     end
 
+    rule(:postfix_expression) do
+     term >> (add_add_op | minus_minus_op).as(:o).maybe
+    end
+
+
     rule(:infix_j_expression) do
-      infix_expression(term, 
+      infix_expression(postfix_expression, 
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
         [(add_op | minus_op), 97, :left],
@@ -208,7 +217,7 @@ module JParsr
         [bw_xor_op, 92, :left],
         [bw_or_op, 91, :left],
         [and_op, 90, :left],
-        [or_op, 89, :left]) | term
+        [or_op, 89, :left]) | postfix_expression
     end
 
 
