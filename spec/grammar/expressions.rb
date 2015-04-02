@@ -336,4 +336,8 @@ shared_examples :expressions do
     tree = parse('this.use("stock").boil((c * 1.8f)+32,"salt")',:expression, true)
   end
 
+  it "should accept a method invocation on an array element as an expression" do
+    tree = parse('soups[3].boil()',:expression, true)
+  end
+
 end
