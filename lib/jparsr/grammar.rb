@@ -194,7 +194,8 @@ module JParsr
     rule(:instance_creation_expression) do
       new_kw >> 
       type_name.as(:type) >> 
-      lparen >> arguments.as(:arguments).maybe >> rparen
+      lparen >> arguments.as(:arguments).maybe >> rparen >>
+      class_block.as(:block).maybe
     end
 
     rule(:term) do
@@ -408,14 +409,18 @@ module JParsr
       enum_constant >> (comma >> enum_constant).repeat.maybe
     end
 
+    rule(:class_block) do
+      lcurly >>
+      class_body_declaration.repeat.maybe >>
+      rcurly
+    end
+
     rule(:class_declaration) do
       class_kw >>
       type_name >>
       extends.maybe >>
       implements.maybe >>
-      lcurly >>
-      class_body_declaration.repeat.maybe >>
-      rcurly >>
+      class_block >>
       skip
     end
 
@@ -425,9 +430,7 @@ module JParsr
       interface_kw >>
       type_name >>
       extends_multiple.maybe >>
-      lcurly >>
-      class_body_declaration.repeat.maybe >>
-      rcurly >>
+      class_block >>
       skip
     end
 

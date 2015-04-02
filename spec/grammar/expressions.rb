@@ -437,4 +437,20 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept the creation of an anonymous class as expression" do
+    parse('new Soup() {}',:expression, true) do |tree|
+      expect(tree.has_key?(:new)).to be true
+      expect(tree[:new][:type]).to eq "Soup"
+      expect(tree[:new].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept the creation of an anonymous class with methods as expression" do
+    parse(%q{this.eat(new Soup() {
+        public void boil(int temperature) {
+        }
+      })
+    },:expression)
+  end
+
 end
