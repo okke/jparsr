@@ -425,4 +425,16 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept a new operator as expression" do
+    parse('new Object()',:expression) do |tree|
+      expect(tree.has_key?(:new)).to be true
+    end
+  end
+
+  it "should accept a new operator with arguments as expression" do
+    parse('new Soup(new Stock("chicken"))',:expression) do |tree|
+      expect(tree.has_key?(:new)).to be true
+    end
+  end
+
 end

@@ -126,6 +126,7 @@ module JParsr
      :int,
      :interface,
      :long,
+     :new,
      :null,
      :package, 
      :private,
@@ -190,13 +191,20 @@ module JParsr
       expression >> (comma >> expression).repeat.maybe
     end
 
+    rule(:instance_creation_expression) do
+      new_kw >> 
+      type_name.as(:type) >> 
+      lparen >> arguments.as(:arguments).maybe >> rparen
+    end
+
     rule(:term) do
-      ((lparen >> expression >> rparen) |
-       id.as(:id)                   | 
-       null_kw.as(:null)            |
-       string_literal.as(:string)   |
-       char_literal.as(:char)       |
-       boolean_literal.as(:boolean) |
+      (instance_creation_expression.as(:new)     |
+       (lparen >> expression >> rparen) |
+       id.as(:id)                       | 
+       null_kw.as(:null)                |
+       string_literal.as(:string)       |
+       char_literal.as(:char)           |
+       boolean_literal.as(:boolean)     |
        numeric_literal              
       ) >> 
       (lparen >> arguments.as(:arguments).maybe >> rparen).maybe >>
