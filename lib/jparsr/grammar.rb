@@ -217,10 +217,11 @@ module JParsr
     end
 
     rule(:unary_expression) do
-      ((add_add_op     |
+      (((lparen >> type.as(:cast) >> rparen) |
+        add_add_op     |
         minus_minus_op |
         not_op         |
-        bw_complement_op).as(:o) >> postfix_expression) |
+        bw_complement_op).as(:o) >> postfix_expression.as(:r)) |
       postfix_expression 
     end
 

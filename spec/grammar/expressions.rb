@@ -425,6 +425,24 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept a cast to class expression" do
+    parse('(Object)j',:expression) do |tree|
+      expect(tree[:o][:cast]).to eq "Object"
+    end
+  end
+
+  it "should accept a cast to primitive expression" do
+    parse('(int)j',:expression) do |tree|
+      expect(tree[:o][:cast]).to eq "int"
+    end
+  end
+
+  it "should accept a cast folowed by a  parenthesized  expression" do
+    parse('(float)(3+4)',:expression) do |tree|
+      expect(tree[:o][:cast]).to eq "float"
+    end
+  end
+
   it "should accept a new operator as expression" do
     parse('new Object()',:expression) do |tree|
       expect(tree.has_key?(:new)).to be true
@@ -438,7 +456,7 @@ shared_examples :expressions do
   end
 
   it "should accept the creation of an anonymous class as expression" do
-    parse('new Soup() {}',:expression, true) do |tree|
+    parse('new Soup() {}',:expression) do |tree|
       expect(tree.has_key?(:new)).to be true
       expect(tree[:new][:type]).to eq "Soup"
       expect(tree[:new].has_key?(:block)).to be true
