@@ -471,4 +471,40 @@ shared_examples :expressions do
     },:expression)
   end
 
+  it "should accept a new operator to allocate an array as expression" do
+    parse('new Soup[3]',:expression) do |tree|
+    end
+  end
+
+  it "should accept a new operator to allocate an array of primitives as expression" do
+    parse('new int[3]',:expression) do |tree|
+      # TODO: check tree
+    end
+  end
+
+  it "should accept a new operator with an array initializer as expression" do
+    parse('new int[3] {1,2,3}',:expression) do |tree|
+      # TODO: check tree
+    end
+  end
+
+  it "should accept a new operator with an multi dimensional array initializer with one value as expression" do
+    parse('new int[][] {{1,2,3}}',:expression) do |tree|
+      # TODO: check tree
+    end
+  end
+
+  it "should accept a new operator with an multi dimensional array initializer as expression" do
+    parse('new int[][] {{1,2,3},{3,4,5}}',:expression) do |tree|
+      # TODO: check tree
+    end
+  end
+
+  it "should accept a new operator with an multi dimensional array initializer with complex expressions as expression" do
+    parse('new int[][] {{1+2,soep.temperature(),3},{0}}',:expression) do |tree|
+      # TODO: check tree
+    end
+  end
+
+
 end

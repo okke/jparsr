@@ -191,11 +191,24 @@ module JParsr
       expression >> (comma >> expression).repeat.maybe
     end
 
+    rule(:array_argument) do
+      (array_initializer | expression)
+    end
+
+    rule(:array_arguments) do
+      array_argument >> (comma >> array_argument).repeat.maybe
+    end
+
+    rule(:array_initializer) do
+      (lcurly >> array_arguments.as(:arguments).maybe >> rcurly)
+    end
+
     rule(:instance_creation_expression) do
       new_kw >> 
-      type_name.as(:type) >> 
-      lparen >> arguments.as(:arguments).maybe >> rparen >>
-      class_block.as(:block).maybe
+      type.as(:type) >> 
+      (lparen >> arguments.as(:arguments).maybe >> rparen >>
+      class_block.as(:block).maybe).maybe >>
+      array_initializer.maybe
     end
 
     rule(:term) do
@@ -311,8 +324,11 @@ module JParsr
       (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
     end
 
+    # TODO: size is not part of type (but is used with the new array[x] 
+    # construction
+    #
     rule(:array) do
-      (lbracket >> rbracket).repeat
+      (lbracket >> numeric_literal.as(:size).maybe >> rbracket).repeat
     end
 
     rule(:type) do
