@@ -136,6 +136,7 @@ module JParsr
      :short,
      :static,
      :synchronized,
+     :throw,
      :transient,
      :true,
      :volatile
@@ -375,6 +376,10 @@ module JParsr
       return_kw >> expression.maybe.as(:expression)
     end
 
+    rule(:throw_statement) do
+      throw_kw >> expression.maybe.as(:expression)
+    end
+
     rule(:synchronized_statement) do
       synchronized_kw >> lparen >> expression >> rparen >> block
     end
@@ -382,6 +387,7 @@ module JParsr
     rule(:statement) do
       (synchronized_statement          | 
        (return_statement >> semicolon) |
+       (throw_statement >> semicolon)  |
        (assignment_expression >> semicolon))
     end
 

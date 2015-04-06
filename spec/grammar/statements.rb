@@ -43,6 +43,16 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a throw expression statement" do
+    parse(%q{
+      class Soep {
+        void boil() {
+          throw new SoupToHotException();
+        }
+      }
+    })
+  end
+
   it "should accept a synchronized statement" do
     parse(%q{
       class Soep {
