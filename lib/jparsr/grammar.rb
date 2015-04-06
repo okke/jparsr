@@ -42,6 +42,7 @@ module JParsr
 
     rule(:dot)         { str('.') >> skip}
     rule(:semicolon)   { str(';') >> skip}
+    rule(:colon)       { str(':') >> skip}
     rule(:lcurly)      { str('{') >> skip}
     rule(:rcurly)      { str('}') >> skip}
     rule(:lparen)      { str('(') >> skip}
@@ -111,10 +112,12 @@ module JParsr
     define_keywords([
      :abstract,
      :boolean,
+     :break,
      :byte,
      :catch,
      :char,
      :class,
+     :continue,
      :double,
      :enum,
      :extends,
@@ -401,12 +404,23 @@ module JParsr
       ((catch_clause.maybe >> finally_clause.maybe) || finally_clause)
     end
 
+    rule(:break_statement) do
+      break_kw >> id.as(:label).maybe
+    end
+
+    rule(:continue_statement) do
+      continue_kw >> id.as(:label).maybe
+    end
+
     rule(:statement) do
-      (synchronized_statement               | 
-       (return_statement >> semicolon)      |
-       (throw_statement >> semicolon)       |
-       (try_statement)                      |
-       (assignment_expression >> semicolon) |
+      (id.as(:label) >> colon).maybe >>
+      ( synchronized_statement.as(:synchronzied)            | 
+       (return_statement.as(:return) >> semicolon)          |
+       (throw_statement.as(:throw) >> semicolon)            |
+       (try_statement.as(:try))                             |
+       (assignment_expression.as(:expression) >> semicolon) |
+       (break_statement.as(:break) >> semicolon)                       |
+       (continue_statement.as(:continue) >> semicolon)                    |
        semicolon
        )
     end

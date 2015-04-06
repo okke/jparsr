@@ -200,4 +200,55 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a labeled statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          start: temperature = 30;
+        }
+      }
+    })
+  end
+
+  it "should accept a break statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          break;
+        }
+      }
+    })
+  end
+
+  it "should accept a labeled break statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          break start;
+        }
+      }
+    })
+  end
+
+  it "should accept a continue statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          continue;
+        }
+      }
+    })
+  end
+
+  it "should accept a labeled continue statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          continue start;
+        }
+      }
+    })
+  end
+
+
 end
