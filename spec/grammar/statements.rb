@@ -124,4 +124,70 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a try catch as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          try {
+          } catch(SoupToHotException e) {
+          }
+        }
+      }
+    })
+  end
+
+  it "should accept a try catch with multiple catches as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          try {
+          } catch(SoupToHotException e) {
+          }
+          catch(StoveOutOfOrderException e) {
+          }
+        }
+      }
+    })
+  end
+
+  it "should accept a try with a finally clause as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          try {
+          } finally {
+          }
+        }
+      }
+    })
+  end
+
+  it "should accept a try-catch with a finally clause as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          try {
+          } catch(SoupToHotException e) {
+          } finally {
+          }
+        }
+      }
+    })
+  end
+
+  it "should accept a try catch finally with multiple catches as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          try {
+          } catch(SoupToHotException e) {
+          }
+          catch(StoveOutOfOrderException e) {
+          } finally {
+          }
+        }
+      }
+    })
+  end
+
 end

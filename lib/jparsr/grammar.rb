@@ -112,12 +112,14 @@ module JParsr
      :abstract,
      :boolean,
      :byte,
+     :catch,
      :char,
      :class,
      :double,
      :enum,
      :extends,
      :false,
+     :finally,
      :final,
      :float,
      :implements,
@@ -138,6 +140,7 @@ module JParsr
      :synchronized,
      :throw,
      :transient,
+     :try,
      :true,
      :volatile
     ])
@@ -384,10 +387,25 @@ module JParsr
       synchronized_kw >> lparen >> expression >> rparen >> block
     end
 
+    rule(:catch_clause) do
+      (catch_kw >> lparen >> type >> id >> rparen >> block).repeat(1)
+    end
+
+    rule(:finally_clause) do
+      finally_kw >> block
+    end
+
+    rule(:try_statement) do
+      try_kw >>
+      block >> 
+      ((catch_clause.maybe >> finally_clause.maybe) || finally_clause)
+    end
+
     rule(:statement) do
       (synchronized_statement          | 
        (return_statement >> semicolon) |
        (throw_statement >> semicolon)  |
+       (try_statement)                 |
        (assignment_expression >> semicolon))
     end
 
