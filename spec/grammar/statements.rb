@@ -250,5 +250,25 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a do while statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          do i--; while (i > 0);
+        }
+      }
+    })
+  end
+
+  it "should accept a do while statement with a block" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          do {
+          } while (i > 0);
+        }
+      }
+    })
+  end
 
 end

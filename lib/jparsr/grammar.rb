@@ -119,6 +119,7 @@ module JParsr
      :class,
      :continue,
      :double,
+     :do,
      :enum,
      :extends,
      :false,
@@ -145,7 +146,8 @@ module JParsr
      :transient,
      :try,
      :true,
-     :volatile
+     :volatile,
+     :while
     ])
 
     rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
@@ -412,6 +414,10 @@ module JParsr
       continue_kw >> id.as(:label).maybe
     end
 
+    rule(:do_statement) do
+      do_kw >> statement.as(:statement) >> while_kw >> lparen >> expression.as(:expression) >> rparen
+    end
+
     rule(:statement) do
       (id.as(:label) >> colon).maybe >>
       ( synchronized_statement.as(:synchronzied)            | 
@@ -419,8 +425,10 @@ module JParsr
        (throw_statement.as(:throw) >> semicolon)            |
        (try_statement.as(:try))                             |
        (assignment_expression.as(:expression) >> semicolon) |
-       (break_statement.as(:break) >> semicolon)                       |
-       (continue_statement.as(:continue) >> semicolon)                    |
+       (break_statement.as(:break) >> semicolon)            |
+       (continue_statement.as(:continue) >> semicolon)      |
+       (do_statement.as(:do) >> semicolon)                  |
+       block.as(:block)                                     |
        semicolon
        )
     end
