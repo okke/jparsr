@@ -104,4 +104,14 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a instance creation as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          new Stove();
+        }
+      }
+    })
+  end
+
 end
