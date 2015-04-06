@@ -95,8 +95,10 @@ shared_examples :statements do
     parse(%q{
       class Soep {
         String boil() {
+          stove.on();
           lightFire();
           andWaitFor(180 /* seconds */);
+          stove.off();
         }
       }
     })
