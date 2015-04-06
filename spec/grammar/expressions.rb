@@ -427,19 +427,19 @@ shared_examples :expressions do
 
   it "should accept a cast to class expression" do
     parse('(Object)j',:expression) do |tree|
-      expect(tree[:o][:cast]).to eq "Object"
+      expect(tree[:o][:cast][:class]).to eq "Object"
     end
   end
 
   it "should accept a cast to primitive expression" do
     parse('(int)j',:expression) do |tree|
-      expect(tree[:o][:cast]).to eq "int"
+      expect(tree[:o][:cast][:class]).to eq "int"
     end
   end
 
   it "should accept a cast folowed by a  parenthesized  expression" do
     parse('(float)(3+4)',:expression) do |tree|
-      expect(tree[:o][:cast]).to eq "float"
+      expect(tree[:o][:cast][:class]).to eq "float"
     end
   end
 
@@ -458,7 +458,7 @@ shared_examples :expressions do
   it "should accept the creation of an anonymous class as expression" do
     parse('new Soup() {}',:expression) do |tree|
       expect(tree.has_key?(:new)).to be true
-      expect(tree[:new][:type]).to eq "Soup"
+      expect(tree[:new][:type][:class]).to eq "Soup"
       expect(tree[:new].has_key?(:block)).to be true
     end
   end
@@ -473,36 +473,46 @@ shared_examples :expressions do
 
   it "should accept a new operator to allocate an array as expression" do
     parse('new Soup[3]',:expression) do |tree|
+      expect(tree[:new][:type][:class]).to eq "Soup"
+      expect(tree[:new][:type][:array][0][:size][:number]).to eq "3"
     end
   end
 
   it "should accept a new operator to allocate an array of primitives as expression" do
     parse('new int[3]',:expression) do |tree|
-      # TODO: check tree
+      expect(tree[:new][:type][:class]).to eq "int"
     end
   end
 
   it "should accept a new operator with an array initializer as expression" do
     parse('new int[3] {1,2,3}',:expression) do |tree|
-      # TODO: check tree
+      expect(tree[:new][:type][:class]).to eq "int"
+      expect(tree[:new][:arguments][0][:number]).to eq "1"
+      expect(tree[:new][:arguments][1][:number]).to eq "2"
+      expect(tree[:new][:arguments][2][:number]).to eq "3"
     end
   end
 
   it "should accept a new operator with an multi dimensional array initializer with one value as expression" do
     parse('new int[][] {{1,2,3}}',:expression) do |tree|
-      # TODO: check tree
+      expect(tree[:new][:arguments][:arguments][0][:number]).to eq "1"
+      expect(tree[:new][:arguments][:arguments][1][:number]).to eq "2"
+      expect(tree[:new][:arguments][:arguments][2][:number]).to eq "3"
     end
   end
 
   it "should accept a new operator with an multi dimensional array initializer as expression" do
-    parse('new int[][] {{1,2,3},{3,4,5}}',:expression) do |tree|
-      # TODO: check tree
+    parse('new int[][] {{1,2},{3,4}}',:expression) do |tree|
+      expect(tree[:new][:arguments][0][:arguments][0][:number]).to eq "1"
+      expect(tree[:new][:arguments][0][:arguments][1][:number]).to eq "2"
+      expect(tree[:new][:arguments][1][:arguments][0][:number]).to eq "3"
+      expect(tree[:new][:arguments][1][:arguments][1][:number]).to eq "4"
     end
   end
 
   it "should accept a new operator with an multi dimensional array initializer with complex expressions as expression" do
     parse('new int[][] {{1+2,soep.temperature(),3},{0}}',:expression) do |tree|
-      # TODO: check tree
+      # is okay
     end
   end
 

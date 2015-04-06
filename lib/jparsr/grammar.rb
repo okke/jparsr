@@ -170,7 +170,7 @@ module JParsr
 
 
     rule(:class_parameter) do
-      type >> (extends_kw >> type_name).maybe >> (comma >> class_parameter).maybe
+      type >> (extends_kw >> type_name.as(:extends)).maybe >> (comma >> class_parameter.as(:more)).maybe
     end
 
     # TODO generic type is been used for rela types and for class declaration
@@ -178,13 +178,13 @@ module JParsr
     #
     rule(:generic_type) do
       lt >>
-      class_parameter >>
+      class_parameter.as(:class) >>
       gt
     end
 
     rule(:type_name)   do 
       id >>
-      generic_type.maybe
+      generic_type.as(:generic).maybe
     end
 
     rule(:arguments) do
@@ -307,17 +307,17 @@ module JParsr
 
     rule(:extends) do
       extends_kw >>
-      type_name
+      type_name.as(:class)
     end
 
     rule(:extends_multiple) do
       extends_kw >>
-      type_name >> (comma >> type_name).repeat.maybe
+      type_name.as(:class) >> (comma >> type_name.as(:class)).repeat.maybe
     end
 
     rule(:implements) do
       implements_kw >>
-      type_name >> (comma >> type_name).repeat.maybe
+      type_name.as(:class) >> (comma >> type_name.as(:class)).repeat.maybe
     end
 
     rule(:primitive_type) do
@@ -332,7 +332,7 @@ module JParsr
     end
 
     rule(:type) do
-      (primitive_type | type_name) >> array.maybe
+      (primitive_type | type_name).as(:class) >> array.as(:array).maybe
     end
 
     rule(:member_modifier) do
@@ -356,7 +356,7 @@ module JParsr
     end
 
     rule(:method_parameters) do
-      type >> id >> (comma >> method_parameters).maybe
+      type >> id.as(:id) >> (comma >> method_parameters.as(:more)).maybe
     end
 
     rule(:local_variable) do
@@ -387,26 +387,26 @@ module JParsr
 
     rule(:method_declaration) do
       lparen >> 
-      method_parameters.maybe >>
+      method_parameters.as(:parameters).maybe >>
       rparen >> 
-      block.maybe >>
+      block.as(:block).maybe >>
       semicolon.maybe
     end
 
     # TODO can parse multiple method names
     #
     rule(:member_field_or_method_declaration) do
-      field_names >> 
-      (method_declaration | (field_initializer.maybe >> semicolon))
+      field_names.as(:name) >> 
+      (method_declaration.as(:mehod) | (field_initializer.as(:initializer).maybe >> semicolon))
     end
 
     rule(:member_declaration) do
-      member_modifier.repeat.maybe >> 
-      generic_type.maybe >>
-      type >> 
+      member_modifier.as(:modifier).repeat.maybe >> 
+      generic_type.as(:generic).maybe >>
+      type.as(:type) >> 
       ( 
-        method_declaration | # constructor
-        member_field_or_method_declaration
+        method_declaration.as(:constructor) | # constructor
+        member_field_or_method_declaration.as(:method_or_field)
       )
     end
 
@@ -415,7 +415,7 @@ module JParsr
     end
 
     rule(:class_body_declaration) do
-      (member_declaration | static_block) >> skip
+      (member_declaration.as(:member) | static_block.as(:static)) >> skip
     end
 
     rule(:enum_constant) do
@@ -428,16 +428,16 @@ module JParsr
 
     rule(:class_block) do
       lcurly >>
-      class_body_declaration.repeat.maybe >>
+      class_body_declaration.as(:class_body_declaration).repeat.maybe >>
       rcurly
     end
 
     rule(:class_declaration) do
       class_kw >>
-      type_name >>
-      extends.maybe >>
-      implements.maybe >>
-      class_block >>
+      type_name.as(:class) >>
+      extends.as(:extends).maybe >>
+      implements.as(:implements).maybe >>
+      class_block.as(:block) >>
       skip
     end
 
@@ -445,19 +445,19 @@ module JParsr
     #
     rule(:interface_declaration) do
       interface_kw >>
-      type_name >>
-      extends_multiple.maybe >>
-      class_block >>
+      type_name.as(:class) >>
+      extends_multiple.as(:extends).maybe >>
+      class_block.as(:block) >>
       skip
     end
 
     rule(:enum_declaration) do
       enum_kw >>
-      type_name >>
-      implements.maybe >>
+      type_name.as(:class) >>
+      implements.as(:implements).maybe >>
       lcurly >>
       enum_constants.maybe >>
-      (semicolon >> class_body_declaration.repeat.maybe).maybe >>
+      (semicolon >> class_body_declaration.as(:class_body_declaration).repeat.maybe).maybe >>
       rcurly >>
       skip
     end
