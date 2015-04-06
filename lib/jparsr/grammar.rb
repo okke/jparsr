@@ -143,16 +143,20 @@ module JParsr
 
     rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
 
+    rule(:numeric_part) {
+      ( match('[0-9]').repeat(1) >> (str('.') >> match('[0-9]').repeat(1)).maybe ) |
+      ( str('.') >> match('[0-9]').repeat(1) )
+    }
+
     # TODO this also matches hexadecimal floating points
     # TODO this will match an empty string
     #
     rule(:numeric_literal) { 
       (str('0x').maybe >> 
       str('0X').maybe >> 
-      match('[0-9]').repeat >> 
-      (str('.') >> match('[0-9]').repeat).maybe >> 
+      numeric_part >>
       (match('[eE]') >> match('[+-]').maybe >> match('[0-9]').repeat).maybe >> 
-      match('[lLdDfF]').maybe).as(:number) >> 
+      match('[lLdDfF]').maybe).as(:number).capture(:parsed_number) >> 
       skip
     }
 
@@ -232,7 +236,9 @@ module JParsr
     rule(:unary_expression) do
       (((lparen >> type.as(:cast) >> rparen) |
         add_add_op     |
+        add_op         |
         minus_minus_op |
+        minus_op       |
         not_op         |
         bw_complement_op).as(:o) >> postfix_expression.as(:r)) |
       postfix_expression 
@@ -374,14 +380,14 @@ module JParsr
     end
 
     rule(:statement) do
-      (synchronized_statement | return_statement)
+      (synchronized_statement | (return_statement >> semicolon))
     end
 
     # TODO semicolon should not be optional
     #
     rule(:block) do
       lcurly >> 
-      ((local_variable.as(:variable) | statement.as(:statement)) >> semicolon.maybe).repeat.maybe >>
+      ((local_variable.as(:variable) >> semicolon) | statement.as(:statement)).repeat.maybe >>
       rcurly
     end
 
