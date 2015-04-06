@@ -67,4 +67,28 @@ shared_examples :statements do
     })
   end
 
+  it "should accept an assignment as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          until = max_temperature;
+          start_at = 30;
+        }
+      }
+    })
+  end
+
+  it "should accept a post/pre increment/decrement  as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          ++temperature;
+          temperature++;
+          --temperature;
+          temperature--;
+        }
+      }
+    })
+  end
+
 end

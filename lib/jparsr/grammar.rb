@@ -380,7 +380,9 @@ module JParsr
     end
 
     rule(:statement) do
-      (synchronized_statement | (return_statement >> semicolon))
+      (synchronized_statement          | 
+       (return_statement >> semicolon) |
+       (assignment_expression >> semicolon))
     end
 
     # TODO semicolon should not be optional
