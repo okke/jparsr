@@ -389,21 +389,21 @@ module JParsr
     end
 
     rule(:synchronized_statement) do
-      synchronized_kw >> lparen >> expression >> rparen >> block
+      synchronized_kw >> lparen >> expression.as(:expression) >> rparen >> block.as(:block)
     end
 
     rule(:catch_clause) do
-      (catch_kw >> lparen >> type >> id >> rparen >> block).repeat(1)
+      (catch_kw >> lparen >> type >> id >> rparen >> block.as(:block)).repeat(1)
     end
 
     rule(:finally_clause) do
-      finally_kw >> block
+      finally_kw >> block.as(:block)
     end
 
     rule(:try_statement) do
       try_kw >>
-      block >> 
-      ((catch_clause.maybe >> finally_clause.maybe) || finally_clause)
+      block.as(:block) >> 
+      ((catch_clause.as(:catch).maybe >> finally_clause.as(:finally).maybe) || finally_clause.as(:finally))
     end
 
     rule(:break_statement) do
@@ -420,7 +420,7 @@ module JParsr
 
     rule(:statement) do
       (id.as(:label) >> colon).maybe >>
-      ( synchronized_statement.as(:synchronzied)            | 
+      ( synchronized_statement.as(:synchronized)            | 
        (return_statement.as(:return) >> semicolon)          |
        (throw_statement.as(:throw) >> semicolon)            |
        (try_statement.as(:try))                             |
@@ -429,7 +429,7 @@ module JParsr
        (continue_statement.as(:continue) >> semicolon)      |
        (do_statement.as(:do) >> semicolon)                  |
        block.as(:block)                                     |
-       semicolon
+       semicolon.as(:empty)
        )
     end
 
