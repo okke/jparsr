@@ -91,4 +91,15 @@ shared_examples :statements do
     })
   end
 
+  it "should accept a method invocation as statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          lightFire();
+          andWaitFor(180 /* seconds */);
+        }
+      }
+    })
+  end
+
 end
