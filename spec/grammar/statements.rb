@@ -190,4 +190,14 @@ shared_examples :statements do
     })
   end
 
+  it "should accept an empty statement" do
+    parse(%q{
+      class Soep {
+        String boil() {
+          tomato=true;;ognion=true;
+        }
+      }
+    })
+  end
+
 end

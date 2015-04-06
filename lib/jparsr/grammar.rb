@@ -402,11 +402,13 @@ module JParsr
     end
 
     rule(:statement) do
-      (synchronized_statement          | 
-       (return_statement >> semicolon) |
-       (throw_statement >> semicolon)  |
-       (try_statement)                 |
-       (assignment_expression >> semicolon))
+      (synchronized_statement               | 
+       (return_statement >> semicolon)      |
+       (throw_statement >> semicolon)       |
+       (try_statement)                      |
+       (assignment_expression >> semicolon) |
+       semicolon
+       )
     end
 
     # TODO semicolon should not be optional
