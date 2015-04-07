@@ -55,48 +55,6 @@ describe JParsr::Grammar do
     })
   end
 
-  it "should accept local method variables" do
-    parse(%q{
-      class Soep {
-        void boil() {
-          int i;
-          String s = null;
-          boolean a,b = true;
-          int[] arr = null;
-          int []arr1, []arr2;
-        };
-      }
-    })
-  end
-
-
-  it "should accept a static block inside a class" do
-    parse(%q{
-      class Soep {
-        static {
-        }
-      }
-    })
-  end
-
-  it "should accept a mix of static blocks, members and methods" do
-    parse(%q{
-      class Soep {
-        public int i = 0;
-        static {
-        }
-        private static final int i = 0;
-        void boil() {
-        }
-        String s = "hot";
-        static {
-          return "return from static block?";
-        }
-        void boilAgain() {
-        }
-      }
-    })
-  end
 
 
 end

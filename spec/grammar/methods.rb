@@ -117,4 +117,32 @@ shared_examples :methods do
     })
   end
 
+  it "should accept local method variables" do
+    parse(%q{
+      class Soep {
+        void boil() {
+          int i;
+          String s = null;
+          boolean a,b = true;
+          int[] arr = null;
+          int []arr1, []arr2;
+        };
+      }
+    })
+  end
+
+  it "should accept a mix of local method variables and statements" do
+    parse(%q{
+      class Soep {
+        int boil() {
+          String s = null;
+          freeze(10);
+          String s2 = null;
+          return 98;
+        };
+      }
+    })
+  end
+
+
 end
