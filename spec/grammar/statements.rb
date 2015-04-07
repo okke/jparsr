@@ -212,4 +212,33 @@ shared_examples :statements do
     end
   end
 
+  it "should accept a while statement without any statement" do
+    parse(%q{while(true);},:statement) do |tree|
+      expect(tree[:while].has_key?(:expression)).to be true
+      expect(tree[:while][:statement].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept a while statement with a statement" do
+    parse(%q{while(true) break;},:statement) do |tree|
+      expect(tree[:while].has_key?(:expression)).to be true
+      expect(tree[:while][:statement].has_key?(:break)).to be true
+    end
+  end
+
+  it "should accept a while statement with an empty block" do
+    parse(%q{while(true) {}},:statement) do |tree|
+      expect(tree[:while].has_key?(:expression)).to be true
+      expect(tree[:while][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a while statement with a block of statements" do
+    parse(%q{while(true) {a = 3; b = 5; }},:statement) do |tree|
+      expect(tree[:while].has_key?(:expression)).to be true
+      expect(tree[:while][:statement][:block][0].has_key?(:statement)).to be true
+      expect(tree[:while][:statement][:block][1].has_key?(:statement)).to be true
+    end
+  end
+
 end

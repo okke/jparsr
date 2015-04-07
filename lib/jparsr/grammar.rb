@@ -415,7 +415,18 @@ module JParsr
     end
 
     rule(:do_statement) do
-      do_kw >> statement.as(:statement) >> while_kw >> lparen >> expression.as(:expression) >> rparen
+      do_kw >> 
+      statement.as(:statement) >> 
+      while_kw >> 
+      lparen >> expression.as(:expression) >> rparen
+    end
+
+    rule(:while_statement) do
+      while_kw >> lparen >> expression.as(:expression) >> rparen >> statement.as(:statement)
+    end
+
+    rule(:wstatement) do
+      (break_statement.as(:break) >> semicolon)
     end
 
     rule(:statement) do
@@ -428,6 +439,7 @@ module JParsr
        (break_statement.as(:break) >> semicolon)            |
        (continue_statement.as(:continue) >> semicolon)      |
        (do_statement.as(:do) >> semicolon)                  |
+       (while_statement.as(:while))            |
        block.as(:block)                                     |
        semicolon.as(:empty)
        )
