@@ -27,7 +27,7 @@ require 'parslet'
 module JParsr 
 
   class Grammar < Parslet::Parser
-    rule(:space)       { match["\s\n\r"].repeat }
+    rule(:space)       { match[" \t\n\r"].repeat }
     rule(:space?)      { space.maybe }
 
     rule(:line_comment) { str('//') >> (match["\n"].absnt? >> any).repeat}

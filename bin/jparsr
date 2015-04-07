@@ -1,0 +1,32 @@
+#!/usr/bin/env ruby
+
+require 'jparsr'
+require 'pp'
+
+JAVA_GRAMMAR = JParsr::Grammar.new
+
+
+def parse(file, rule, lines)
+  begin
+    result = JAVA_GRAMMAR.send(rule).parse(lines.join(''),reporter: Parslet::ErrorReporter::Deepest.new)
+
+    PP.pp(result.to_hash)
+  rescue Parslet::ParseFailed => failure
+    STDERR.puts "parse error while parsing #{file}"
+    STDERR.puts failure.cause.ascii_tree
+  end
+end
+
+argf_lines = nil
+argf_fname = nil
+ARGF.each do |line|
+  if ARGF.file.lineno == 1
+    # start of new file
+    #
+    parse(argf_fname, :root, argf_lines) unless argf_lines == nil
+    argf_lines = []
+    argf_fname = ARGF.filename
+  end
+  argf_lines << line
+end
+parse(argf_fname, :root, argf_lines) unless argf_lines == nil
