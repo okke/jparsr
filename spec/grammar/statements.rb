@@ -312,4 +312,81 @@ shared_examples :statements do
     end
   end
 
+  it "should accept a for in a while" do
+    parse(%q{while(true) for(;;) {}},:statement) do |tree|
+      expect(tree[:while][:statement].has_key?(:for)).to be true
+    end
+  end
+
+  it "should accept an if without stament" do
+    parse(%q{if(true);},:statement) do |tree|
+      expect(tree[:if].has_key?(:expression)).to be true
+      expect(tree[:if][:true].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept an if with a statement" do
+    parse(%q{if(true) return;},:statement) do |tree|
+      expect(tree[:if].has_key?(:expression)).to be true
+      expect(tree[:if][:true].has_key?(:return)).to be true
+    end
+  end
+
+  it "should accept an if with a block" do
+    parse(%q{if(true) {}},:statement) do |tree|
+      expect(tree[:if].has_key?(:expression)).to be true
+      expect(tree[:if][:true].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept an if without stament and an else without statement" do
+    parse(%q{if(true); else;},:statement) do |tree|
+      expect(tree[:if][:true].has_key?(:empty)).to be true
+      expect(tree[:if][:false].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept an if with a block and an else without statement" do
+    parse(%q{if(true) {} else;},:statement) do |tree|
+      expect(tree[:if][:true].has_key?(:block)).to be true
+      expect(tree[:if][:false].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept an if withouth statement and an else with a block" do
+    parse(%q{if(true); else {}},:statement) do |tree|
+      expect(tree[:if][:true].has_key?(:empty)).to be true
+      expect(tree[:if][:false].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept an if with a block and an else with a block" do
+    parse(%q{if(true) {} else {}},:statement) do |tree|
+      expect(tree[:if][:true].has_key?(:block)).to be true
+      expect(tree[:if][:false].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept an if with an if" do
+    parse(%q{if(true) if(false);},:statement) do |tree|
+      expect(tree[:if][:true][:if][:true].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept an if with an if and an else" do
+    parse(%q{if(true) if(false); else;},:statement) do |tree|
+      expect(tree[:if][:true][:if][:true].has_key?(:empty)).to be true
+      expect(tree[:if].has_key?(:false)).to be false
+      expect(tree[:if][:true][:if][:false].has_key?(:empty)).to be true
+    end
+  end
+
+  it "should accept an if with an if and an else" do
+    parse(%q{if(true) ; else if(false);},:statement) do |tree|
+      expect(tree[:if][:true].has_key?(:empty)).to be true
+      expect(tree[:if][:false][:if][:true].has_key?(:empty)).to be true
+    end
+  end
+
+
 end

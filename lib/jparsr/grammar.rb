@@ -120,6 +120,7 @@ module JParsr
      :continue,
      :double,
      :do,
+     :else,
      :enum,
      :extends,
      :false,
@@ -127,6 +128,7 @@ module JParsr
      :final,
      :float,
      :for,
+     :if,
      :implements,
      :import,
      :instanceof,
@@ -423,7 +425,8 @@ module JParsr
     end
 
     rule(:while_statement) do
-      while_kw >> lparen >> expression.as(:expression) >> rparen >> statement.as(:statement)
+      while_kw >> lparen >> expression.as(:expression) >> rparen >>
+      statement.as(:statement)
     end
 
     rule(:for_statement) do
@@ -436,6 +439,11 @@ module JParsr
       rparen >> statement.as(:statement)
     end
 
+    rule(:if_statement) do
+      if_kw >> lparen >> expression.as(:expression) >> rparen >> 
+      statement.as(:true) >>
+      (else_kw >> statement.as(:false)).maybe
+    end
 
     rule(:statement) do
       (id.as(:label) >> colon).maybe >>
@@ -449,6 +457,7 @@ module JParsr
        (do_statement.as(:do) >> semicolon)                  |
        (while_statement.as(:while))                         |
        (for_statement.as(:for))                             |
+       (if_statement.as(:if))                               |
        block.as(:block)                                     |
        semicolon.as(:empty)
        )
