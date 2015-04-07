@@ -388,5 +388,87 @@ shared_examples :statements do
     end
   end
 
+  it "should accept a switch with a single empty case" do
+    parse(%q{switch(soup) {
+              case hot:
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+    end
+  end
+
+  it "should accept a switch with a multiple empty cases" do
+    parse(%q{switch(soup) {
+              case hot:
+              case cold:
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][1].has_key?(:expression)).to be true
+    end
+  end
+
+  it "should accept a switch with an empty default" do
+    parse(%q{switch(soup) {
+              default:
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:default)).to be true
+    end
+  end
+
+  it "should accept a switch with an empty case and an empty default" do
+    parse(%q{switch(soup) {
+              case hot:
+              default:
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][1].has_key?(:default)).to be true
+    end
+  end
+
+  it "should accept a switch with a case with a single statement" do
+    parse(%q{switch(soup) {
+              case hot: freeze(20);
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0][:statements][0].has_key?(:expression)).to be true
+    end
+  end
+
+  it "should accept a switch with a case with a multiple statements" do
+    parse(%q{switch(soup) {
+              case hot: freeze(20); break;
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0][:statements][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0][:statements][1].has_key?(:break)).to be true
+    end
+  end
+
+  it "should accept a switch with a default with a multiple statements" do
+    parse(%q{switch(soup) {
+              default: freeze(20); break;
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:default)).to be true
+      expect(tree[:switch][:labels][0][:statements][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0][:statements][1].has_key?(:break)).to be true
+    end
+  end
+
+  it "should accept a switch with a case followed by a block" do
+    parse(%q{switch(soup) {
+              case cold: {boil(20); break;}
+             }},:statement) do |tree|
+      expect(tree[:switch].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0].has_key?(:expression)).to be true
+      expect(tree[:switch][:labels][0][:statements][0].has_key?(:block)).to be true
+    end
+  end
+
 
 end

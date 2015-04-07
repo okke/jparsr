@@ -114,10 +114,12 @@ module JParsr
      :boolean,
      :break,
      :byte,
+     :case,
      :catch,
      :char,
      :class,
      :continue,
+     :default,
      :double,
      :do,
      :else,
@@ -145,6 +147,7 @@ module JParsr
      :short,
      :static,
      :synchronized,
+     :switch,
      :throw,
      :transient,
      :try,
@@ -445,6 +448,23 @@ module JParsr
       (else_kw >> statement.as(:false)).maybe
     end
 
+    rule(:switch_statements) do
+      statement.repeat
+    end
+
+    rule(:switch_labels) do
+      ( (( case_kw >> expression >> colon).as(:expression) |
+        ( default_kw >> colon).as(:default)) >> 
+        switch_statements.as(:statements)).repeat
+    end
+
+    rule(:switch_statement) do
+      switch_kw >> lparen >> expression.as(:expression) >> rparen >> 
+      lcurly >>
+      switch_labels.as(:labels).maybe >>
+      rcurly
+    end
+
     rule(:statement) do
       (id.as(:label) >> colon).maybe >>
       ( synchronized_statement.as(:synchronized)            | 
@@ -458,6 +478,7 @@ module JParsr
        (while_statement.as(:while))                         |
        (for_statement.as(:for))                             |
        (if_statement.as(:if))                               |
+       (switch_statement.as(:switch))                       |
        block.as(:block)                                     |
        semicolon.as(:empty)
        )
