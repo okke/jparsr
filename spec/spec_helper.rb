@@ -9,9 +9,11 @@ def pretty_result(result)
   end
 end
 
+JAVA_GRAMMAR = JParsr::Grammar.new
+
 def parse(s, rule=:root, debug=false, &block)
   begin
-    result = JParsr::Grammar.new.send(rule).parse(s,reporter: Parslet::ErrorReporter::Deepest.new)
+    result = JAVA_GRAMMAR.send(rule).parse(s,reporter: Parslet::ErrorReporter::Deepest.new)
     if debug
       puts "PARSED(#{s})\n\nRESULT:\n"
       PP.pp(pretty_result(result))
