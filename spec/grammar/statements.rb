@@ -241,4 +241,75 @@ shared_examples :statements do
     end
   end
 
+  it "should accept a for statement without init, condition and update" do 
+    parse(%q{for(;;) {}},:statement) do |tree|
+      expect(tree.has_key?(:for)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement without init and update" do 
+    parse(%q{for(;true;) {}},:statement) do |tree|
+      expect(tree[:for].has_key?(:expression)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement without init or expression but with single update" do 
+    parse(%q{for(;;a++) {}},:statement) do |tree|
+      expect(tree[:for].has_key?(:update)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement without init or expression but with multiple updates" do 
+    parse(%q{for(;;a++,b++) {}},:statement) do |tree|
+      expect(tree[:for][:update][0].has_key?(:o)).to be true
+      expect(tree[:for][:update][1].has_key?(:o)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement with a single init and no expression nor update" do
+    parse(%q{for(a=3;;) {}},:statement) do |tree|
+      expect(tree[:for].has_key?(:init)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement with a multiple inits and no expression nor update" do
+    parse(%q{for(a=3,b=4;;) {}},:statement) do |tree|
+      expect(tree[:for][:init][0].has_key?(:o)).to be true
+      expect(tree[:for][:init][1].has_key?(:o)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept a for statement with a local var init and no expression nor update" do
+    parse(%q{for(int a=3;;) {}},:statement) do |tree|
+      expect(tree[:for][:init].has_key?(:class)).to be true
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+    end
+  end
+
+  it "should accept the most well known for statement" do
+    parse(%q{for(int i=0;i<100;i++) {}},:statement) do |tree|
+      expect(tree[:for].has_key?(:init)).to be true
+      expect(tree[:for].has_key?(:expression)).to be true
+      expect(tree[:for].has_key?(:update)).to be true
+    end
+  end
+
+  it "should accept a for in a while" do
+    parse(%q{while(true) for(;;) {}},:statement) do |tree|
+      expect(tree[:while][:statement].has_key?(:for)).to be true
+    end
+  end
+
+  it "should accept a while in a for" do
+    parse(%q{for(;;) while(true) {}},:statement) do |tree|
+      expect(tree[:for][:statement].has_key?(:while)).to be true
+    end
+  end
+
 end

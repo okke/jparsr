@@ -126,6 +126,7 @@ module JParsr
      :finally,
      :final,
      :float,
+     :for,
      :implements,
      :import,
      :instanceof,
@@ -343,7 +344,7 @@ module JParsr
     # construction
     #
     rule(:array) do
-      (lbracket >> numeric_literal.as(:size).maybe >> rbracket).repeat
+      (lbracket >> numeric_literal.as(:size).maybe >> rbracket).repeat(1)
     end
 
     rule(:type) do
@@ -425,9 +426,16 @@ module JParsr
       while_kw >> lparen >> expression.as(:expression) >> rparen >> statement.as(:statement)
     end
 
-    rule(:wstatement) do
-      (break_statement.as(:break) >> semicolon)
+    rule(:for_statement) do
+      for_kw >> lparen >>
+      (local_variable | arguments).as(:init).maybe >>
+      semicolon >>
+      expression.as(:expression).maybe >>
+      semicolon >>
+      arguments.as(:update).maybe >>
+      rparen >> statement.as(:statement)
     end
+
 
     rule(:statement) do
       (id.as(:label) >> colon).maybe >>
@@ -439,7 +447,8 @@ module JParsr
        (break_statement.as(:break) >> semicolon)            |
        (continue_statement.as(:continue) >> semicolon)      |
        (do_statement.as(:do) >> semicolon)                  |
-       (while_statement.as(:while))            |
+       (while_statement.as(:while))                         |
+       (for_statement.as(:for))                             |
        block.as(:block)                                     |
        semicolon.as(:empty)
        )
