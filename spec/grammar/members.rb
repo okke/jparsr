@@ -102,6 +102,14 @@ shared_examples :members do
     })
   end
 
+  it "should accept multiple field names with initializers" do
+    parse(%q{
+      class Soep {
+        int i1 = 1, i2 = 2, i3 = 3;
+      }
+    })
+  end
+
   it "should accept an array type field" do
     parse(%q{
       class Soep {

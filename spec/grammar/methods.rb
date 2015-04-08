@@ -126,6 +126,7 @@ shared_examples :methods do
           boolean a,b = true;
           int[] arr = null;
           int []arr1, []arr2;
+          int i1=1, i2=2, i3=3;
         };
       }
     })

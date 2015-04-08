@@ -394,8 +394,8 @@ module JParsr
 
     rule(:local_variable) do
       type >> 
-      field_names >>
-      field_initializer.maybe
+      (field_names >> field_initializer.maybe) >>
+      (comma >> field_names >> field_initializer.maybe).repeat
     end
 
     rule(:return_statement) do
@@ -521,7 +521,8 @@ module JParsr
     #
     rule(:member_field_or_method_declaration) do
       field_names.as(:name) >> 
-      (method_declaration.as(:method) | (field_initializer.as(:initializer).maybe >> semicolon))
+      (method_declaration.as(:method) | (field_initializer.as(:initializer).maybe >> semicolon.maybe)) >>
+      (comma >> member_field_or_method_declaration.as(:member)).maybe
     end
 
     rule(:member_declaration) do
@@ -530,7 +531,7 @@ module JParsr
       type.as(:type) >> 
       ( 
         method_declaration.as(:constructor) | # constructor
-        member_field_or_method_declaration.as(:method_or_field)
+        member_field_or_method_declaration.as(:member) 
       )
     end
 
