@@ -327,8 +327,8 @@ module JParsr
     #
     rule(:import_declaration) do
       import_kw >>
-      static_kw.maybe >>
-      (id >> (dot >> (star | id)).repeat.maybe) >>
+      static_kw.as(:static).maybe >>
+      (id.as(:id) >> (dot >> (star.as(:any) | id.as(:id))).repeat).as(:import) >>
       semicolon >> 
       skip
     end
@@ -588,7 +588,7 @@ module JParsr
     rule(:source_file) do
       skip >>
       package_declaration.maybe.as(:package) >>
-      import_declaration.maybe.as(:imports) >>
+      import_declaration.repeat.as(:imports) >>
       type_declaration.repeat.maybe.as(:types)
     end
 

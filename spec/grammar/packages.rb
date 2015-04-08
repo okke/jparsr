@@ -51,6 +51,18 @@ shared_examples :packages do
     })
   end
 
+  it "should accept multiple fully qualified class import" do
+    parse(%q{
+      import com.soup.Bowl;
+      import com.soup.Recipe;
+      class Soep {
+      }
+    },:root) do |tree|
+      expect(tree[:imports][0].has_key?(:import)).to be true
+      expect(tree[:imports][1].has_key?(:import)).to be true
+    end
+  end
+
   it "should accept a wildcard package import" do
     parse(%q{
       import com.soup.*;
