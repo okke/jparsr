@@ -332,6 +332,12 @@ shared_examples :expressions do
     tree = parse('boil(95,"salt")',:expression)
   end
 
+  it "should accept a method invocation on an object" do
+    parse('this.boil(95)',:expression) do |tree|
+      # TODO check tree
+    end
+  end
+
   it "should accept a method invocation on an object with muitple arguments contaning complex expressions as an expression" do
     tree = parse('this.use("stock").boil((c * 1.8f)+32,"salt")',:expression)
   end
@@ -513,6 +519,11 @@ shared_examples :expressions do
   it "should accept a new operator with an multi dimensional array initializer with complex expressions as expression" do
     parse('new int[][] {{1+2,soep.temperature(),3},{0}}',:expression) do |tree|
       # is okay
+    end
+  end
+
+  it "should accept an id string with a keyword within an expression" do
+    parse('naam.charAt(n)',:expression) do |tree|
     end
   end
 

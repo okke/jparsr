@@ -22,11 +22,14 @@
 # 
 
 
-require 'parslet'
+require 'jparsr/parslet_ext'
 
 module JParsr 
 
   class Grammar < Parslet::Parser
+
+    @@keywords = {}
+
     rule(:space)       { match[" \t\n\r"].repeat }
     rule(:space?)      { space.maybe }
 
@@ -104,8 +107,8 @@ module JParsr
     def self.define_keywords(words)
       words.each do |kw|
         rule((kw.to_s + "_kw").to_sym) { str(kw.to_s) >> skip }
+        @@keywords[kw.to_s] = true
       end
-      rule(:keyword) { match(words.map {|w| w.to_s}.join("|")) >> skip }
     end
 
 
@@ -156,7 +159,15 @@ module JParsr
      :while
     ])
 
-    rule(:id)          { keyword.absnt? >> match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe >> skip}
+    rule(:id_chars)    { match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe }
+
+    def self.is_not_a_keyword(capture)
+    end
+
+    rule(:id)          {
+      #(keyword.absnt? >> id_chars.not_in(@@keywords,"keywords") >> skip)
+      id_chars.not_in(@@keywords,"keywords") >> skip
+    }
 
     rule(:numeric_part) {
       ( match('[0-9]').repeat(1) >> (str('.') >> match('[0-9]').repeat(1)).maybe ) |
