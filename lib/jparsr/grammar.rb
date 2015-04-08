@@ -152,6 +152,7 @@ module JParsr
      :synchronized,
      :switch,
      :throw,
+     :throws,
      :transient,
      :try,
      :true,
@@ -503,10 +504,15 @@ module JParsr
       rcurly
     end
 
+    rule(:method_throws) do
+      throws_kw >> type.as(:type) >> (comma >> type.as(:type)).repeat
+    end
+
     rule(:method_declaration) do
       lparen >> 
       method_parameters.as(:parameters).maybe >>
       rparen >> 
+      method_throws.as(:throws).maybe >>
       block.as(:block).maybe >>
       semicolon.maybe
     end
@@ -515,7 +521,7 @@ module JParsr
     #
     rule(:member_field_or_method_declaration) do
       field_names.as(:name) >> 
-      (method_declaration.as(:mehod) | (field_initializer.as(:initializer).maybe >> semicolon))
+      (method_declaration.as(:method) | (field_initializer.as(:initializer).maybe >> semicolon))
     end
 
     rule(:member_declaration) do

@@ -144,5 +144,23 @@ shared_examples :methods do
     })
   end
 
+  it "should accept a throws clause with one defined exception" do
+    parse(%q{
+      class Soep {
+        int boil() throws SoupToHotException {
+        }
+      }
+    })
+  end
+
+  it "should accept a throws clause with multiple defined exception" do
+    parse(%q{
+      class Soep {
+        int boil() throws SoupToHotException, AllSoupGoneException {
+        }
+      }
+    })
+  end
+
 
 end
