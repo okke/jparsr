@@ -527,5 +527,11 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept a string concattenation as expression" do 
+    parse(%q{"love my soup like " + what},:expression) do |tree|
+      expect(tree[:o].has_key?(:add)).to be true
+    end
+  end
+
 
 end

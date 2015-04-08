@@ -193,8 +193,8 @@ module JParsr
     rule(:s_nonquote)   { str('"').absnt? >> any }
     rule(:c_nonquote) { str("'").absnt? >> any }
     rule(:escape)     { str('\\') >> any }
-    rule(:string_literal) { s_quote >> (escape | s_nonquote).repeat >> s_quote }
-    rule(:char_literal) { c_quote >> (escape | c_nonquote) >> c_quote }
+    rule(:string_literal) { s_quote >> (escape | s_nonquote).repeat >> s_quote >> skip}
+    rule(:char_literal) { c_quote >> (escape | c_nonquote) >> c_quote >> skip}
 
     rule(:package_name) { id >> (dot >> id).repeat.maybe }
 
