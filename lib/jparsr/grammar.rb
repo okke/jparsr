@@ -381,7 +381,7 @@ module JParsr
     end 
 
     rule(:field_names) do
-      array.maybe >> id >> (comma >> array.maybe >> id).repeat.maybe
+      array.maybe >> id >> array.maybe >> (comma >> array.maybe >> id >> array.maybe).repeat.maybe
     end
 
     rule(:field_initializer) do

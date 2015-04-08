@@ -118,6 +118,14 @@ shared_examples :members do
     })
   end
 
+  it "should accept an array type field with a new array initializer" do
+    parse(%q{
+      class Soep {
+        Ingredient ingredients[] = null
+      }
+    })
+  end
+
   it "should accept an array of arrays type field" do
     parse(%q{
       class Soep {
@@ -131,6 +139,14 @@ shared_examples :members do
       class Soep {
         int []arr = null;
         int []arr1, []arr2 = null;
+      }
+    })
+  end
+
+  it "should accept an array type field with a new array initializer" do
+    parse(%q{
+      class Soep {
+        Ingredient ingredients[] = new Ingredient[9];
       }
     })
   end
