@@ -527,6 +527,7 @@ module JParsr
       lparen >> 
       method_parameters.as(:parameters).maybe >>
       rparen >> 
+      (default_kw >> expression).maybe >>
       method_throws.as(:throws).maybe >>
       block.as(:block).maybe >>
       semicolon.maybe
@@ -585,7 +586,7 @@ module JParsr
     # TODO: give interfaces their own body grammar
     #
     rule(:interface_declaration) do
-      interface_kw >>
+      at.as(:is_annotation).maybe >> interface_kw >>
       type_name.as(:name) >>
       extends_multiple.as(:extends).maybe >>
       class_block.as(:block) >>

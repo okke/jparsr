@@ -181,5 +181,36 @@ shared_examples :annotations do
     })
   end
 
+  it "should accept an annotation interface" do
+    parse(%q{
+      @interface Spicey {
+      }
+    })
+  end
+
+  it "should accept an annotation interface with an argument definition" do
+    parse(%q{
+      @interface Spicey {
+        String pepper();
+      }
+    })
+  end
+
+  it "should accept an annotation interface with default value for an argument definitions" do
+    parse(%q{
+      @interface Spicey {
+        String pepper() default "red";
+      }
+    })
+  end
+
+  it "should accept an annotated annotation interface" do
+    parse(%q{
+      @AspectOfSoup
+      @interface Spicey {
+      }
+    })
+  end
+
 end
 
