@@ -25,9 +25,12 @@ shared_examples :classes do
 
   it "should accept an empty class" do
     parse(%q{
-      class Soep {
+      class Soep 
+      {
       }
-    })
+    },:root) do |tree|
+      expect(find(tree,[:class, :name])).to eq "Soep"
+    end
   end
 
   it "should accept an multple classes" do

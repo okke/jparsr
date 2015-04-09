@@ -163,12 +163,8 @@ module JParsr
 
     rule(:id_chars)    { match('[a-zA-Z_]') >> match('[a-zA-Z0-9_]').repeat.maybe }
 
-    def self.is_not_a_keyword(capture)
-    end
-
     rule(:id)          {
-      #(keyword.absnt? >> id_chars.not_in(@@keywords,"keywords") >> skip)
-      id_chars.not_in(@@keywords,"keywords") >> skip
+      id_chars.not_in(@@keywords,"keywords") >> skip.skip
     }
 
     rule(:numeric_part) {
@@ -616,7 +612,7 @@ module JParsr
       skip >>
       package_declaration.maybe.as(:package) >>
       import_declaration.repeat.as(:imports) >>
-      type_declaration.as(:type).repeat.maybe.as(:types)
+      type_declaration.repeat.maybe.as(:types)
     end
 
     root :source_file

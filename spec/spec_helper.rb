@@ -25,3 +25,23 @@ def parse(s, rule=:root, debug=false, &block)
     raise failure
   end
 end
+
+def find(tree,sym)
+  if sym.is_a?(Array)
+    found = find(tree,sym[0])
+    return found if sym.size == 1 or found == nil
+    find(found,sym.slice(1..-1))
+  else
+    return tree[sym] if tree.has_key?(sym)
+    tree.each do |k,v|
+      return find(v,sym) if v.is_a?(Hash)
+      if v.is_a?(Array)
+        v.each do |v_in|
+          found = find(v_in, sym)
+          return found if found != nil
+        end
+      end
+    end
+    nil
+  end
+end
