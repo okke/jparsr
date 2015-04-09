@@ -57,6 +57,7 @@ module JParsr
     rule(:assign)      { str('=') >> skip}
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
+    rule(:at)          { str('@') >> skip}
 
 
     rule(:multiply_op)    { (str('*') >> str('=').absnt?).as(:multiply) >> skip}
@@ -202,6 +203,15 @@ module JParsr
 
     rule(:class_parameter) do
       type >> (extends_kw >> type_name.as(:extends)).maybe >> (comma >> class_parameter.as(:more)).maybe
+    end
+
+    rule(:annotation) do
+      at >> id.as(:id) >>
+      (lparen >> arguments.as(:arguments).maybe >> rparen).maybe
+    end
+
+    rule(:annotations) do
+      annotation.as(:annotation).repeat(1).as(:annotations)
     end
 
     # TODO generic type is been used for rela types and for class declaration
@@ -388,11 +398,16 @@ module JParsr
       assign >> expression
     end
 
+    rule(:method_parameter) do
+      annotations.maybe >> type >> id.as(:id)
+    end
+
     rule(:method_parameters) do
-      type >> id.as(:id) >> (comma >> method_parameters.as(:more)).maybe
+      method_parameter >> (comma >> method_parameter).repeat
     end
 
     rule(:local_variable) do
+      annotations.maybe >>
       type >> 
       (field_names >> field_initializer.maybe) >>
       (comma >> field_names >> field_initializer.maybe).repeat
@@ -526,6 +541,7 @@ module JParsr
     end
 
     rule(:member_declaration) do
+      annotations.maybe >>
       member_modifier.as(:modifier).repeat.maybe >> 
       generic_type.as(:generic).maybe >>
       type.as(:type) >> 
@@ -559,7 +575,7 @@ module JParsr
 
     rule(:class_declaration) do
       class_kw >>
-      type_name.as(:class) >>
+      type_name.as(:name) >>
       extends.as(:extends).maybe >>
       implements.as(:implements).maybe >>
       class_block.as(:block) >>
@@ -570,7 +586,7 @@ module JParsr
     #
     rule(:interface_declaration) do
       interface_kw >>
-      type_name.as(:class) >>
+      type_name.as(:name) >>
       extends_multiple.as(:extends).maybe >>
       class_block.as(:block) >>
       skip
@@ -578,7 +594,7 @@ module JParsr
 
     rule(:enum_declaration) do
       enum_kw >>
-      type_name.as(:class) >>
+      type_name.as(:name) >>
       implements.as(:implements).maybe >>
       lcurly >>
       enum_constants.maybe >>
@@ -588,15 +604,18 @@ module JParsr
     end
 
     rule(:type_declaration) do
+      annotations.maybe >>
       type_modifier.maybe >>
-      (class_declaration | interface_declaration | enum_declaration)
+      (class_declaration.as(:class)         | 
+       interface_declaration.as(:interface) |
+       enum_declaration.as(:enum))
     end
 
     rule(:source_file) do
       skip >>
       package_declaration.maybe.as(:package) >>
       import_declaration.repeat.as(:imports) >>
-      type_declaration.repeat.maybe.as(:types)
+      type_declaration.as(:type).repeat.maybe.as(:types)
     end
 
     root :source_file
