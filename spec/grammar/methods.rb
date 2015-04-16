@@ -59,6 +59,15 @@ shared_examples :methods do
     })
   end
 
+  it "should accept method with an array parameter" do
+    parse(%q{
+      class Soep {
+        void boil(float temperature[]) {
+        }
+      }
+    })
+  end
+
   it "should accept multiple methods" do
     parse(%q{
       class Soep {

@@ -390,8 +390,12 @@ module JParsr
        synchronized_kw)
     end 
 
+    rule(:field_name) do
+      array.maybe >> id >> array.maybe
+    end
+
     rule(:field_names) do
-      array.maybe >> id >> array.maybe >> (comma >> array.maybe >> id >> array.maybe).repeat.maybe
+      field_name >> (comma >> field_name).repeat.maybe
     end
 
     rule(:field_initializer) do
@@ -399,7 +403,7 @@ module JParsr
     end
 
     rule(:method_parameter) do
-      annotations.maybe >> type >> id.as(:id)
+      annotations.maybe >> type >> field_name
     end
 
     rule(:method_parameters) do
