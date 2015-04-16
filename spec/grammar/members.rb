@@ -151,6 +151,14 @@ shared_examples :members do
     })
   end
 
+  it "should accept an array type field with a primitive array initializer" do
+    parse(%q{
+      class Soep {
+        float ratings[] = {9,8,9};
+      }
+    })
+  end
+
   it "should accept a fully qualified member" do
     parse(%q{
       class Soep {

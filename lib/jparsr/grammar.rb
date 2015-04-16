@@ -399,7 +399,7 @@ module JParsr
     end
 
     rule(:field_initializer) do
-      assign >> expression
+      assign >> (array_initializer | expression)
     end
 
     rule(:method_parameter) do

@@ -155,6 +155,16 @@ shared_examples :methods do
     })
   end
 
+  it "should accept a local variable with a primitive array initializer" do
+    parse(%q{
+      class Soep {
+        void boil() {
+          int temperatures[] = {65,85,95};
+        };
+      }
+    })
+  end
+
   it "should accept a fully qualified local method variable" do
     parse(%q{
       class Soep {
