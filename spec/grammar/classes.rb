@@ -141,4 +141,49 @@ shared_examples :classes do
     })
   end
 
+  it "should accept an inner class" do
+    parse(%q{
+      class Soep {
+        class Ingredient {
+        }
+      }
+    })
+  end
+
+  it "should accept an inner interface" do
+    parse(%q{
+      class Soep {
+        interface Ingredient {
+        }
+      }
+    })
+  end
+
+  it "should accept a static inner class" do
+    parse(%q{
+      class Soep {
+        static class Ingredient {
+        }
+      }
+    })
+  end
+
+  it "should accept a private inner class" do
+    parse(%q{
+      class Soep {
+        private class Ingredient {
+        }
+      }
+    })
+  end
+
+  it "should accept a protected inner class" do
+    parse(%q{
+      class Soep {
+        protected class Ingredient {
+        }
+      }
+    })
+  end
+
 end

@@ -345,7 +345,7 @@ module JParsr
     end
 
     rule(:type_modifier) do
-      (public_kw | final_kw | abstract_kw).repeat
+      (public_kw | final_kw | abstract_kw | static_kw | private_kw | protected_kw).repeat
     end
 
     rule(:extends) do
@@ -568,7 +568,7 @@ module JParsr
     end
 
     rule(:class_body_declaration) do
-      (member_declaration.as(:member) | static_block.as(:static)) >> skip
+      (type_declaration.as(:inner) | member_declaration.as(:member) | static_block) >> skip
     end
 
     rule(:enum_constant) do
