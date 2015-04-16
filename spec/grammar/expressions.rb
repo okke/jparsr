@@ -433,25 +433,32 @@ shared_examples :expressions do
 
   it "should accept a cast to class expression" do
     parse('(Object)j',:expression) do |tree|
-      expect(tree[:cast][:class]).to eq "Object"
+      expect(tree[:cast][:class][:id]).to eq "Object"
+    end
+  end
+
+  it "should accept a cast to a fully qualified class expression" do
+    parse('(special.Soup)soup',:expression) do |tree|
+      expect(tree[:cast][:class][0][:id]).to eq "special"
+      expect(tree[:cast][:class][1][:id]).to eq "Soup"
     end
   end
 
   it "should accept a cast to primitive expression" do
     parse('(int)j',:expression) do |tree|
-      expect(tree[:cast][:class]).to eq "int"
+      expect(tree[:cast][:class][:id]).to eq "int"
     end
   end
 
   it "should accept a cast folowed by a  parenthesized  expression" do
     parse('(float)(3+4)',:expression) do |tree|
-      expect(tree[:cast][:class]).to eq "float"
+      expect(tree[:cast][:class][:id]).to eq "float"
     end
   end
 
   it "should accept a cast of a unary minus as expression" do 
     parse(%q{(float) -a},:expression) do |tree|
-      expect(tree[:cast][:class]).to eq "float"
+      expect(tree[:cast][:class][:id]).to eq "float"
       expect(tree[:o].has_key?(:minus)).to be true
     end
   end
@@ -459,6 +466,14 @@ shared_examples :expressions do
   it "should accept a new operator as expression" do
     parse('new Object()',:expression) do |tree|
       expect(tree.has_key?(:new)).to be true
+    end
+  end
+
+  it "should accept a new operator with a fully qualified class as expression" do
+    parse('new special.Soup()',:expression) do |tree|
+      expect(tree.has_key?(:new)).to be true
+      expect(tree[:new][:class][0][:id]).to eq "special"
+      expect(tree[:new][:class][1][:id]).to eq "Soup"
     end
   end
 
@@ -471,7 +486,7 @@ shared_examples :expressions do
   it "should accept the creation of an anonymous class as expression" do
     parse('new Soup() {}',:expression) do |tree|
       expect(tree.has_key?(:new)).to be true
-      expect(tree[:new][:type][:class]).to eq "Soup"
+      expect(tree[:new][:class][:id]).to eq "Soup"
       expect(tree[:new].has_key?(:block)).to be true
     end
   end
@@ -486,20 +501,20 @@ shared_examples :expressions do
 
   it "should accept a new operator to allocate an array as expression" do
     parse('new Soup[3]',:expression) do |tree|
-      expect(tree[:new][:type][:class]).to eq "Soup"
-      expect(tree[:new][:type][:array][0][:size][:number]).to eq "3"
+      expect(tree[:new][:class][:id]).to eq "Soup"
+      expect(tree[:new][:array][0][:size][:number]).to eq "3"
     end
   end
 
   it "should accept a new operator to allocate an array of primitives as expression" do
     parse('new int[3]',:expression) do |tree|
-      expect(tree[:new][:type][:class]).to eq "int"
+      expect(tree[:new][:class][:id]).to eq "int"
     end
   end
 
   it "should accept a new operator with an array initializer as expression" do
     parse('new int[3] {1,2,3}',:expression) do |tree|
-      expect(tree[:new][:type][:class]).to eq "int"
+      expect(tree[:new][:class][:id]).to eq "int"
       expect(tree[:new][:arguments][0][:number]).to eq "1"
       expect(tree[:new][:arguments][1][:number]).to eq "2"
       expect(tree[:new][:arguments][2][:number]).to eq "3"

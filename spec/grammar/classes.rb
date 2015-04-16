@@ -29,7 +29,7 @@ shared_examples :classes do
       {
       }
     },:root) do |tree|
-      expect(find(tree,[:class, :name])).to eq "Soep"
+      expect(find(tree,[:class, :name, :id])).to eq "Soep"
     end
   end
 

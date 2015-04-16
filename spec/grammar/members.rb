@@ -151,4 +151,12 @@ shared_examples :members do
     })
   end
 
+  it "should accept a fully qualified member" do
+    parse(%q{
+      class Soep {
+        special.Ingredient ingredient;
+      }
+    })
+  end
+
 end

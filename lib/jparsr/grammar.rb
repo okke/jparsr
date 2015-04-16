@@ -220,7 +220,7 @@ module JParsr
     end
 
     rule(:type_name)   do 
-      id >>
+      id.as(:id) >> (dot >> id.as(:id)).repeat >>
       generic_type.as(:generic).maybe
     end
 
@@ -242,7 +242,7 @@ module JParsr
 
     rule(:instance_creation_expression) do
       new_kw >> 
-      type.as(:type) >> 
+      type >> 
       (lparen >> arguments.as(:arguments).maybe >> rparen >>
       class_block.as(:block).maybe).maybe >>
       array_initializer.maybe
@@ -364,7 +364,7 @@ module JParsr
     end
 
     rule(:primitive_type) do
-      (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw)
+      (boolean_kw | byte_kw | short_kw | int_kw | long_kw | char_kw | float_kw | double_kw).as(:id)
     end
 
     # TODO: size is not part of type (but is used with the new array[x] 

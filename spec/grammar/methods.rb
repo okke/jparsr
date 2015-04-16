@@ -146,6 +146,16 @@ shared_examples :methods do
     })
   end
 
+  it "should accept a fully qualified local method variable" do
+    parse(%q{
+      class Soep {
+        int boil() {
+          special.MenuItem menuItem;
+        };
+      }
+    })
+  end
+
   it "should accept a throws clause with one defined exception" do
     parse(%q{
       class Soep {
