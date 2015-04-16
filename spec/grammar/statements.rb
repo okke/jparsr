@@ -292,6 +292,13 @@ shared_examples :statements do
     end
   end
 
+  it "should accept an iterator style for statement" do
+    parse(%q{for(Soup s : Soups) {}},:statement) do |tree|
+      expect(tree[:for][:statement].has_key?(:block)).to be true
+      expect(tree[:for][:iterable][:id]).to eq "Soups"
+    end
+  end
+
   it "should accept the most well known for statement" do
     parse(%q{for(int i=0;i<100;i++) {}},:statement) do |tree|
       expect(tree[:for].has_key?(:init)).to be true

@@ -463,14 +463,21 @@ module JParsr
       statement.as(:statement)
     end
 
+    rule(:for_iterator) do
+      ( 
+        semicolon >>
+        expression.as(:expression).maybe >>
+        semicolon >> arguments.as(:update).maybe
+      ) |
+      ( colon >> expression.as(:iterable) )
+    end
+
     rule(:for_statement) do
       for_kw >> lparen >>
       (local_variable | arguments).as(:init).maybe >>
-      semicolon >>
-      expression.as(:expression).maybe >>
-      semicolon >>
-      arguments.as(:update).maybe >>
-      rparen >> statement.as(:statement)
+      for_iterator >>
+      rparen >> 
+      statement.as(:statement)
     end
 
     rule(:if_statement) do
