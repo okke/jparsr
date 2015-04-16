@@ -555,6 +555,12 @@ shared_examples :expressions do
     end
   end
 
+  it "should accept class as a field access as expression" do
+    parse(%q{Soup.class},:expression) do |tree|
+      expect(tree[:r][:id]).to eq "class"
+    end
+  end
+
 
 
 end

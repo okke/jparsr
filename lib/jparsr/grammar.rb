@@ -252,6 +252,7 @@ module JParsr
     rule(:term) do
       (instance_creation_expression.as(:new)     |
        (lparen >> expression >> rparen) |
+       class_kw.as(:id)                 |
        id.as(:id)                       | 
        null_kw.as(:null)                |
        string_literal.as(:string)       |
