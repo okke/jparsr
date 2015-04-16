@@ -43,7 +43,8 @@ module JParsr
 
     rule(:skip)        { space? >> (comment >> skip).maybe >> space?}
 
-    rule(:dot)         { str('.') >> skip}
+    rule(:dot)         { str('.') >> str('.').absnt? >> skip}
+    rule(:dotdotdot)   { str('...') >> skip}
     rule(:semicolon)   { str(';') >> skip}
     rule(:colon)       { str(':') >> skip}
     rule(:lcurly)      { str('{') >> skip}
@@ -403,7 +404,7 @@ module JParsr
     end
 
     rule(:method_parameter) do
-      annotations.maybe >> type >> field_name
+      annotations.maybe >> type >> dotdotdot.as(:variable).maybe >> field_name
     end
 
     rule(:method_parameters) do
