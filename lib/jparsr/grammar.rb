@@ -267,18 +267,22 @@ module JParsr
     end
 
     rule(:unary_expression) do
-      (((lparen >> type.as(:cast) >> rparen) |
-        add_add_op     |
-        add_op         |
-        minus_minus_op |
-        minus_op       |
-        not_op         |
-        bw_complement_op).as(:o) >> postfix_expression.as(:r)) |
+      (( add_add_op     |
+         add_op         |
+         minus_minus_op |
+         minus_op       |
+         not_op         |
+         bw_complement_op).as(:o) >> postfix_expression.as(:r)) |
       postfix_expression 
     end
 
+    rule(:cast_expression) do
+      (lparen >> type.as(:cast) >> rparen >> unary_expression) |
+      unary_expression
+    end
+
     rule(:infix_j_expression) do
-      infix_expression(unary_expression, 
+      infix_expression(cast_expression, 
         [dot, 99, :left],
         [(multiply_op | divide_op | modulo_op), 98, :left],
         [(add_op | minus_op), 97, :left],
@@ -289,7 +293,7 @@ module JParsr
         [bw_xor_op, 92, :left],
         [bw_or_op, 91, :left],
         [and_op, 90, :left],
-        [or_op, 89, :left]) | unary_expression
+        [or_op, 89, :left]) | cast_expression
     end
 
 

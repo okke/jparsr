@@ -433,19 +433,26 @@ shared_examples :expressions do
 
   it "should accept a cast to class expression" do
     parse('(Object)j',:expression) do |tree|
-      expect(tree[:o][:cast][:class]).to eq "Object"
+      expect(tree[:cast][:class]).to eq "Object"
     end
   end
 
   it "should accept a cast to primitive expression" do
     parse('(int)j',:expression) do |tree|
-      expect(tree[:o][:cast][:class]).to eq "int"
+      expect(tree[:cast][:class]).to eq "int"
     end
   end
 
   it "should accept a cast folowed by a  parenthesized  expression" do
     parse('(float)(3+4)',:expression) do |tree|
-      expect(tree[:o][:cast][:class]).to eq "float"
+      expect(tree[:cast][:class]).to eq "float"
+    end
+  end
+
+  it "should accept a cast of a unary minus as expression" do 
+    parse(%q{(float) -a},:expression) do |tree|
+      expect(tree[:cast][:class]).to eq "float"
+      expect(tree[:o].has_key?(:minus)).to be true
     end
   end
 
@@ -532,6 +539,7 @@ shared_examples :expressions do
       expect(tree[:o].has_key?(:add)).to be true
     end
   end
+
 
 
 end
