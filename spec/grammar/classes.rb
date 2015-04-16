@@ -85,6 +85,13 @@ shared_examples :classes do
     })
   end
 
+  it "should accept class inheritance from a fully qualified class" do
+    parse(%q{
+      class Soep extends special.Bowl {
+      }
+    })
+  end
+
   it "should accept single interface implementation" do
     parse(%q{
       class Soep implements Bowl {
