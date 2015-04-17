@@ -202,5 +202,14 @@ shared_examples :methods do
     })
   end
 
+  it "should accept a final method parameter" do
+    parse(%q{
+      class Soep {
+        int boil(final int i) {
+        }
+      }
+    })
+  end
+
 
 end

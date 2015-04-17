@@ -405,7 +405,7 @@ module JParsr
     end
 
     rule(:method_parameter) do
-      annotations.maybe >> type >> dotdotdot.as(:variable).maybe >> field_name
+      final_kw.maybe >> annotations.maybe >> final_kw.maybe >> type >> dotdotdot.as(:variable).maybe >> field_name
     end
 
     rule(:method_parameters) do

@@ -143,6 +143,24 @@ shared_examples :annotations do
     })
   end
 
+  it "should accept a single annotation before a final method argument definition" do
+    parse(%q{
+      class Soup {
+        public void boil(@Temperature final int t) {
+        }
+      }
+    })
+  end
+
+  it "should accept a single annotation after the final clause of a method argument definition" do
+    parse(%q{
+      class Soup {
+        public void boil(final @Temperature final int t) {
+        }
+      }
+    })
+  end
+
   it "should accept a multiple annotations before a method argument definition" do
     parse(%q{
       class Soup {
