@@ -21,10 +21,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
+shared_examples :transform_packages do
 
-module JParsr
-  # Your code goes here...
+  it "should accept a package statement" do
+    transform(%q{
+      package soep;
+    })
+  end
+
+
 end

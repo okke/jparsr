@@ -21,10 +21,15 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
+require 'spec_helper'
 
-module JParsr
-  # Your code goes here...
+require 'transformer/files'
+require 'transformer/packages'
+
+
+describe JParsr::Transformer do
+
+  it_behaves_like :transform_files
+  it_behaves_like :transform_packages
+
 end

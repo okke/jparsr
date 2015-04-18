@@ -21,10 +21,22 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
 
-module JParsr
-  # Your code goes here...
+
+require 'jparsr/model/source_file'
+
+module JParsr 
+
+
+  class Transformer
+
+    def root(tree)
+      JParsr::SourceFile.new(tree)
+    end
+
+    def apply(tree, rule=:root)
+      self.send(rule, tree)
+    end
+  end
+
 end

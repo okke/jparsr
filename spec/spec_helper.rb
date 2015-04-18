@@ -10,6 +10,7 @@ def pretty_result(result)
 end
 
 JAVA_GRAMMAR = JParsr::Grammar.new
+JAVA_TRANSFORMER = JParsr::Transformer.new
 
 def parse(s, rule=:root, debug=false, &block)
   begin
@@ -23,6 +24,18 @@ def parse(s, rule=:root, debug=false, &block)
   rescue Parslet::ParseFailed => failure
     puts failure.cause.ascii_tree if debug
     raise failure
+  end
+end
+
+def transform(s, rule=:root, debug=false, &block)
+  parse(s,rule,debug) do |tree| 
+    result = JAVA_TRANSFORMER.apply(tree)
+    if debug
+      puts "TRANSFORMED INTO:\n\n"
+      PP.pp(result)
+    end
+    yield result if block_given?
+    result
   end
 end
 

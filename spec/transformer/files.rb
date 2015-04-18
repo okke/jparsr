@@ -21,10 +21,14 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
+shared_examples :transform_files do
 
-module JParsr
-  # Your code goes here...
+  it "should transform an empty file into a SourceFile object" do
+    transform(%q{
+    },:root,true) do |object|
+      expect(object.is_a? JParsr::SourceFile).to be true
+    end
+  end
+
+
 end
