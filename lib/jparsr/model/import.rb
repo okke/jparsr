@@ -21,14 +21,26 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-class JParsr::Base
+class JParsr::Import < JParsr::Base
+
+  attr_reader :name
 
   def initialize(tree)
+    super(tree)
+
+    @name = ids_to_name(tree[:import])
+    @static = tree.has_key?(:static)
+    @all = tree.has_key?(:all)
+
   end
 
-  private
-
-  def ids_to_name(tree)
-    [tree].flatten.map { |v| v[:id].to_s }.join(".")
+  def static?
+    @static
   end
+
+  def all?
+    @all
+  end
+
 end
+

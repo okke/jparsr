@@ -341,7 +341,7 @@ module JParsr
     rule(:import_declaration) do
       import_kw >>
       static_kw.as(:static).maybe >>
-      (id.as(:id) >> (dot >> (star.as(:any) | id.as(:id))).repeat).as(:import) >>
+      (id.as(:id) >> (dot >> id.as(:id)).repeat).as(:import) >> (dot >> star.as(:all)).maybe >>
       semicolon >> 
       skip
     end

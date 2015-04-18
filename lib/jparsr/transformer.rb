@@ -26,6 +26,7 @@
 require 'jparsr/model/base'
 require 'jparsr/model/source_file'
 require 'jparsr/model/package'
+require 'jparsr/model/import'
 
 module JParsr 
 

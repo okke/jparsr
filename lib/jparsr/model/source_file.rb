@@ -24,10 +24,17 @@
 class JParsr::SourceFile < JParsr::Base
 
   attr_reader :package
+  attr_reader :imports
 
   def initialize(tree)
     super(tree)
     @package = JParsr::Package.new(tree[:package])
+    @imports = []
+    if tree[:imports]
+      tree[:imports].each do |import|
+        imports << JParsr::Import.new(import)
+      end
+    end
   end
 
 end

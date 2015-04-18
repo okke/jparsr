@@ -28,9 +28,7 @@ class JParsr::Package < JParsr::Base
   def initialize(tree)
     super(tree)
     @name = "default"
-    if tree
-      @name = [tree].flatten.map { |v| v[:id].to_s }.join(".")
-    end
+    @name = ids_to_name(tree) if tree
   end
 
 end
