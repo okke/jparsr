@@ -25,8 +25,17 @@ shared_examples :transform_files do
 
   it "should transform an empty file into a SourceFile object" do
     transform(%q{
-    },:root,true) do |object|
+    }) do |object|
       expect(object.is_a? JParsr::SourceFile).to be true
+    end
+  end
+
+  it "should transform file within a package to a Package object" do
+    transform(%q{
+      package special.soup.ingredients;
+    }) do |object|
+      expect(object.package.is_a? JParsr::Package).to be true
+      expect(object.package.name).to eq "special.soup.ingredients"
     end
   end
 

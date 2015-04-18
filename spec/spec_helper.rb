@@ -29,7 +29,7 @@ end
 
 def transform(s, rule=:root, debug=false, &block)
   parse(s,rule,debug) do |tree| 
-    result = JAVA_TRANSFORMER.apply(tree)
+    result = JAVA_TRANSFORMER.apply(tree, rule)
     if debug
       puts "TRANSFORMED INTO:\n\n"
       PP.pp(result)

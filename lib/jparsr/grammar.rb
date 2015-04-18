@@ -195,7 +195,7 @@ module JParsr
     rule(:string_literal) { s_quote >> (escape | s_nonquote).repeat >> s_quote >> skip}
     rule(:char_literal) { c_quote >> (escape | c_nonquote) >> c_quote >> skip}
 
-    rule(:package_name) { id >> (dot >> id).repeat.maybe }
+    rule(:package_name) { id.as(:id) >> (dot >> id.as(:id)).repeat.maybe }
 
 
     rule(:class_parameter) do

@@ -24,6 +24,7 @@
 
 
 require 'jparsr/model/source_file'
+require 'jparsr/model/package'
 
 module JParsr 
 

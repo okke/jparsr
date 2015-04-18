@@ -26,7 +26,7 @@ shared_examples :transform_packages do
   it "should accept a package statement" do
     transform(%q{
       package soep;
-    })
+    },:root)
   end
 
 
