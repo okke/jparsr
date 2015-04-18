@@ -23,6 +23,7 @@
 
 
 
+require 'jparsr/model/base'
 require 'jparsr/model/source_file'
 require 'jparsr/model/package'
 

@@ -21,13 +21,9 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-class JParsr::SourceFile < JParsr::Base
-
-  attr_reader :package
+class JParsr::Base
 
   def initialize(tree)
-    super(tree)
-    @package = JParsr::Package.new(tree[:package])
   end
 
 end

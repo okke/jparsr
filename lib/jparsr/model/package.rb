@@ -21,11 +21,12 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-class JParsr::Package
+class JParsr::Package < JParsr::Base
 
   attr_reader :name
 
   def initialize(tree)
+    super(tree)
     @name = "default"
     if tree
       @name = [tree].flatten.map { |v| v[:id].to_s }.join(".")
