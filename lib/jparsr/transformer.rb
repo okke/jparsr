@@ -27,11 +27,15 @@ require 'jparsr/model/base'
 require 'jparsr/model/source_file'
 require 'jparsr/model/package'
 require 'jparsr/model/import'
+require 'jparsr/model/class'
 
 module JParsr 
 
-
   class Transformer
+
+    def class_declaration(tree)
+      JParsr::Class.new(tree)
+    end
 
     def root(tree)
       JParsr::SourceFile.new(tree)

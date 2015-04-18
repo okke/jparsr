@@ -21,13 +21,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-shared_examples :transform_packages do
+shared_examples :transform_classes do
 
-  it "should accept a package statement" do
-    transform(%q{
-      package soep;
-    },:root)
+  it "should transform an empty class into a Class object" do
+    transform(%q{class Soup {
+    }},:class_declaration) do |object|
+      expect(object.is_a? JParsr::Class).to be true
+    end
   end
-
 
 end

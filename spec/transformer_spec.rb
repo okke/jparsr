@@ -24,12 +24,12 @@
 require 'spec_helper'
 
 require 'transformer/files'
-require 'transformer/packages'
+require 'transformer/classes'
 
 
 describe JParsr::Transformer do
 
   it_behaves_like :transform_files
-  it_behaves_like :transform_packages
+  it_behaves_like :transform_classes
 
 end

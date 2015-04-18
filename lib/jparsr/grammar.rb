@@ -336,8 +336,6 @@ module JParsr
       skip
     end
 
-    # TODO, current import allows multiple '*'s in declaration
-    #
     rule(:import_declaration) do
       import_kw >>
       static_kw.as(:static).maybe >>
@@ -587,7 +585,13 @@ module JParsr
       rcurly
     end
 
+    rule(:pre_type_declaration) do
+      annotations.as(:annotations).maybe >>
+      type_modifier.as(:modifiers).maybe
+    end
+
     rule(:class_declaration) do
+      pre_type_declaration >>
       class_kw >>
       type_name.as(:name) >>
       extends.as(:extends).maybe >>
@@ -599,6 +603,7 @@ module JParsr
     # TODO: give interfaces their own body grammar
     #
     rule(:interface_declaration) do
+      pre_type_declaration >>
       at.as(:is_annotation).maybe >> interface_kw >>
       type_name.as(:name) >>
       extends_multiple.as(:extends).maybe >>
@@ -607,6 +612,7 @@ module JParsr
     end
 
     rule(:enum_declaration) do
+      pre_type_declaration >>
       enum_kw >>
       type_name.as(:name) >>
       implements.as(:implements).maybe >>
@@ -618,8 +624,6 @@ module JParsr
     end
 
     rule(:type_declaration) do
-      annotations.maybe >>
-      type_modifier.maybe >>
       (class_declaration.as(:class)         | 
        interface_declaration.as(:interface) |
        enum_declaration.as(:enum))

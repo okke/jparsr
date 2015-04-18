@@ -81,5 +81,23 @@ shared_examples :transform_files do
     end
   end
 
+  it "should build list of declared classes with one class" do
+    transform(%q{
+    public class Soup {
+    }
+    }) do |object|
+      expect(object.classes.size).to eq 1
+    end
+  end
+
+  it "should build list of declared classes with multiple classes" do
+    transform(%q{
+    public class Soup { }
+    public class Bowl { }
+    }) do |object|
+      expect(object.classes.size).to eq 2
+    end
+  end
+
 
 end

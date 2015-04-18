@@ -21,28 +21,11 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-class JParsr::SourceFile < JParsr::Base
-
-  attr_reader :package
-  attr_reader :imports
-  attr_reader :classes
+class JParsr::Class < JParsr::Base
 
   def initialize(tree)
     super(tree)
-    @package = JParsr::Package.new(tree[:package])
-    @imports = []
-    if tree[:imports]
-      tree[:imports].each do |import|
-        imports << JParsr::Import.new(import)
-      end
-    end
-
-    @classes = []
-    if tree[:types] and tree[:types].is_a?(Array)
-      tree[:types].each do |type|
-        classes << JParsr::Class.new(type[:class]) if type.has_key?(:class)
-      end
-    end
   end
 
 end
+
