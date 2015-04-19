@@ -27,6 +27,47 @@ shared_examples :transform_classes do
     transform(%q{class Soup {
     }},:class_declaration) do |object|
       expect(object.is_a? JParsr::Class).to be true
+      expect(object.name).to eq "Soup"
+    end
+  end
+
+  it "should transform class modifiers" do
+    transform(%q{public class Soup {
+    }},:class_declaration) do |object|
+      expect(object.public?).to be true
+      expect(object.visibility).to eq :public
+    end
+    transform(%q{private class Soup {
+    }},:class_declaration) do |object|
+      expect(object.private?).to be true
+      expect(object.visibility).to eq :private
+    end
+    transform(%q{protected class Soup {
+    }},:class_declaration) do |object|
+      expect(object.protected?).to be true
+      expect(object.visibility).to eq :protected
+    end
+    transform(%q{abstract class Soup {
+    }},:class_declaration) do |object|
+      expect(object.abstract?).to be true
+    end
+    transform(%q{public abstract class Soup {
+    }},:class_declaration) do |object|
+      expect(object.abstract?).to be true
+      expect(object.public?).to be true
+    end
+    transform(%q{final class Soup {
+    }},:class_declaration) do |object|
+      expect(object.final?).to be true
+    end
+    transform(%q{private final class Soup {
+    }},:class_declaration) do |object|
+      expect(object.final?).to be true
+      expect(object.private?).to be true
+    end
+    transform(%q{static class Soup {
+    }},:class_declaration) do |object|
+      expect(object.static?).to be true
     end
   end
 

@@ -345,7 +345,12 @@ module JParsr
     end
 
     rule(:type_modifier) do
-      (public_kw | final_kw | abstract_kw | static_kw | private_kw | protected_kw).repeat
+      (public_kw.as(:public)     | 
+       final_kw.as(:final)       |
+       abstract_kw.as(:abstract) | 
+       static_kw.as(:static)     | 
+       private_kw.as(:private)   | 
+       protected_kw.as(:protected)).repeat
     end
 
     rule(:extends) do

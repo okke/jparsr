@@ -23,8 +23,51 @@
 
 class JParsr::Class < JParsr::Base
 
+  attr_reader :name
+  attr_reader :visibility
+
   def initialize(tree)
     super(tree)
+
+    @name = tree[:name][:id]
+
+    @visibility = :default
+    @final = false;
+    @static = false;
+    @abstract = false;
+
+    tree[:modifiers].each do |mod|
+      @visibility = :public if mod.has_key?(:public)
+      @visibility = :private if mod.has_key?(:private)
+      @visibility = :protected if mod.has_key?(:protected)
+      @final = true if mod.has_key?(:final)
+      @static = true if mod.has_key?(:static)
+      @abstract = true if mod.has_key?(:abstract)
+    end
+  end
+
+  def public?
+    @visibility == :public
+  end
+
+  def private?
+    @visibility == :private
+  end
+
+  def protected?
+    @visibility == :protected
+  end
+
+  def abstract?
+    @abstract
+  end
+
+  def static?
+    @static
+  end
+
+  def final?
+    @final
   end
 
 end
