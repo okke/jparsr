@@ -71,4 +71,31 @@ shared_examples :transform_classes do
     end
   end
 
+  it "should build unresolved reference to super class" do
+    transform(%q{class Soup extends Food {
+    }},:class_declaration) do |object|
+      expect(object.unresolved_super_class).to eq "Food"
+    end
+    transform(%q{class Soup extends special.kitchen.Food {
+    }},:class_declaration) do |object|
+      expect(object.unresolved_super_class).to eq "special.kitchen.Food"
+    end
+  end
+
+  it "should build unresolved references to interfaces" do
+    transform(%q{class Soup implements Food {
+    }},:class_declaration) do |object|
+      expect(object.unresolved_interfaces).to eq ["Food"]
+    end
+    transform(%q{class Soup implements special.kitchen.Food {
+    }},:class_declaration) do |object|
+      expect(object.unresolved_interfaces).to eq ["special.kitchen.Food"]
+    end
+
+    transform(%q{class Soup implements Food,Boilable {
+    }},:class_declaration) do |object|
+      expect(object.unresolved_interfaces).to eq ["Food","Boilable"]
+    end
+  end
+
 end

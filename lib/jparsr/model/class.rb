@@ -31,6 +31,9 @@ class JParsr::Class < JParsr::Base
   attr_reader :name
   attr_reader :visibility
 
+  attr_reader :unresolved_super_class
+  attr_reader :unresolved_interfaces
+
   def initialize(tree, package=nil)
     super(tree)
 
@@ -53,6 +56,15 @@ class JParsr::Class < JParsr::Base
       @final = true if mod.has_key?(:final)
       @static = true if mod.has_key?(:static)
       @abstract = true if mod.has_key?(:abstract)
+    end
+
+    @unresolved_super_class = ids_to_name(tree[:extends][:class]) if tree[:extends]
+
+    @unresolved_interfaces = []
+    if tree[:implements]
+      [tree[:implements]].flatten.each do |interface|
+        @unresolved_interfaces << ids_to_name(interface[:class])
+      end
     end
   end
 
