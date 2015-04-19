@@ -99,5 +99,22 @@ shared_examples :transform_files do
     end
   end
 
+  it "should build a reference from class to package" do
+    transform(%q{
+    package special.kitchen;
+
+    public class Soup { }
+    }) do |object|
+      expect(object.classes[0].package.name).to eq "special.kitchen"
+      expect(object.classes[0].id).to eq "special.kitchen.Soup"
+    end
+
+    transform(%q{
+    public class Soup { }
+    }) do |object|
+      expect(object.classes[0].id).to eq "Soup"
+    end
+  end
+
 
 end

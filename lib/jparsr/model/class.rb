@@ -23,13 +23,23 @@
 
 class JParsr::Class < JParsr::Base
 
+  # class belongs to a package
+  #
+  attr_reader :package 
+
+  attr_reader :id
   attr_reader :name
   attr_reader :visibility
 
-  def initialize(tree)
+  def initialize(tree, package=nil)
     super(tree)
 
+    @package = package
+
     @name = tree[:name][:id]
+
+    @id = @name
+    @id = "#{@package.name}.#{@name}" if @package and @package.name and @package.name != ""
 
     @visibility = :default
     @final = false;

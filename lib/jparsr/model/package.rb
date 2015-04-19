@@ -27,7 +27,7 @@ class JParsr::Package < JParsr::Base
 
   def initialize(tree)
     super(tree)
-    @name = "default"
+    @name = ""
     @name = ids_to_name(tree) if tree
   end
 
