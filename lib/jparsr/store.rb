@@ -21,11 +21,47 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
-require "jparsr/store"
+require 'pstore'
 
-module JParsr
-  # Your code goes here...
+class JParsr::Store
+
+  attr_reader :name
+
+  def initialize(name)
+    @store = PStore.new(name)
+    @name = name
+  end
+
+  def write(&block)
+    @store.transaction do 
+      yield JParsr::StoreWriter.new(@store) if block_given?
+    end
+  end
+
+  def read(&block)
+    @store.transaction(true) do 
+      yield JParsr::StoreReader.new(@store) if block_given?
+    end
+  end
+
+  def destroy
+    File.delete(name)
+  end
+
+end
+
+class JParsr::StoreReader
+  def initialize(store)
+    @store = store
+  end
+end
+
+class JParsr::StoreWriter
+  def initialize(store)
+    @store = store
+  end
+
+  def add(fname, source)
+    @store[fname] = source
+  end
 end

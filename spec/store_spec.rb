@@ -21,11 +21,27 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require "jparsr/version"
-require "jparsr/grammar"
-require "jparsr/transformer"
-require "jparsr/store"
+require 'spec_helper'
 
-module JParsr
-  # Your code goes here...
+describe JParsr::Store do
+
+  before(:each) do
+    @store = JParsr::Store.new("jparsr_spec.store")
+  end
+
+  after(:each) do
+    @store.destroy
+  end
+
+  it "should store parsed source files" do
+    transform(%q{
+      public class Soup {
+      }
+    }) do |source|
+      @store.write do |s|
+        s.add("Soup.java", source)
+      end
+    end
+  end
+
 end
