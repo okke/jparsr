@@ -33,15 +33,46 @@ describe JParsr::Store do
     @store.destroy
   end
 
-  it "should store parsed source files" do
+  it "should store and retrieve parsed source files" do
     transform(%q{
       public class Soup {
       }
     }) do |source|
       @store.write do |s|
-        s.add("Soup.java", source)
+        s.add_source("Soup.java", source)
       end
     end
+
+    found = false
+    @store.read do |s|
+      s.get_source("Soup.java") do |source|
+        found = true
+        expect(source.classes[0].name).to eq "Soup"
+      end
+    end
+    expect(found).to be true
+  end
+
+  it "should store and retrieve classes" do
+    transform(%q{
+      package special.kitchen;
+
+      public class Soup {
+      }
+    }) do |source|
+      @store.write do |s|
+        s.add_source("Soup.java", source)
+      end
+    end
+
+    found = false
+    @store.read do |s|
+      s.get_class("special.kitchen.Soup") do |clazz|
+        found = true
+        expect(clazz.name).to eq "Soup"
+      end
+    end
+    expect(found).to be true
   end
 
 end

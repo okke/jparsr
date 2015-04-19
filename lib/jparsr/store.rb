@@ -54,6 +54,22 @@ class JParsr::StoreReader
   def initialize(store)
     @store = store
   end
+
+  def get_source(name, &block)
+    retrieve "source:#{name}", &block
+  end
+
+  def get_class(name, &block)
+    retrieve "class:#{name}", &block
+  end
+
+  private
+
+  def retrieve(key, &block)
+    found = @store[key]
+    yield found if block_given?
+    found
+  end
 end
 
 class JParsr::StoreWriter
@@ -61,7 +77,11 @@ class JParsr::StoreWriter
     @store = store
   end
 
-  def add(fname, source)
-    @store[fname] = source
+  def add_source(name, source)
+    @store["source:#{name}"] = source
+
+    source.classes.each do |clazz|
+      @store["class:#{clazz.id}"] = clazz
+    end
   end
 end
