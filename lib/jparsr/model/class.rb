@@ -27,6 +27,10 @@ class JParsr::Class < JParsr::Base
   #
   attr_reader :package 
 
+  # class is declared in source file
+  #
+  attr_reader :source
+
   attr_reader :id
   attr_reader :name
   attr_reader :visibility
@@ -34,10 +38,11 @@ class JParsr::Class < JParsr::Base
   attr_reader :unresolved_super_class
   attr_reader :unresolved_interfaces
 
-  def initialize(tree, package=nil)
+  def initialize(tree, package=nil, source=nil)
     super(tree)
 
     @package = package
+    @source = source
 
     @name = tree[:name][:id]
 

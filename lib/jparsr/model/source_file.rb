@@ -40,7 +40,7 @@ class JParsr::SourceFile < JParsr::Base
     @classes = []
     if tree[:types] and tree[:types].is_a?(Array)
       tree[:types].each do |type|
-        classes << JParsr::Class.new(type[:class], @package) if type.has_key?(:class)
+        classes << JParsr::Class.new(type[:class], @package, self) if type.has_key?(:class)
       end
     end
   end
