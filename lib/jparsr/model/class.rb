@@ -36,7 +36,7 @@ class JParsr::Class < JParsr::Base
   attr_reader :visibility
 
   attr_reader :super_class_type
-  attr_reader :unresolved_interfaces
+  attr_reader :interface_types
 
   def initialize(tree, package=nil, source=nil)
     super(tree)
@@ -65,10 +65,10 @@ class JParsr::Class < JParsr::Base
 
     @super_class_type = JParsr::Type.new(tree[:extends][:class]) if tree[:extends]
 
-    @unresolved_interfaces = []
+    @interface_types = []
     if tree[:implements]
       [tree[:implements]].flatten.each do |interface|
-        @unresolved_interfaces << ids_to_name(interface[:class])
+        @interface_types << JParsr::Type.new(interface[:class])
       end
     end
   end

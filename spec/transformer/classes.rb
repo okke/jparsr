@@ -85,16 +85,16 @@ shared_examples :transform_classes do
   it "should build unresolved references to interfaces" do
     transform(%q{class Soup implements Food {
     }},:class_declaration) do |object|
-      expect(object.unresolved_interfaces).to eq ["Food"]
+      expect(object.interface_types.map {|i| i.id}).to eq ["Food"]
     end
     transform(%q{class Soup implements special.kitchen.Food {
     }},:class_declaration) do |object|
-      expect(object.unresolved_interfaces).to eq ["special.kitchen.Food"]
+      expect(object.interface_types.map {|i| i.id}).to eq ["special.kitchen.Food"]
     end
 
     transform(%q{class Soup implements Food,Boilable {
     }},:class_declaration) do |object|
-      expect(object.unresolved_interfaces).to eq ["Food","Boilable"]
+      expect(object.interface_types.map {|i| i.id}).to eq ["Food","Boilable"]
     end
   end
 
