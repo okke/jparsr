@@ -74,11 +74,11 @@ shared_examples :transform_classes do
   it "should build unresolved reference to super class" do
     transform(%q{class Soup extends Food {
     }},:class_declaration) do |object|
-      expect(object.unresolved_super_class).to eq "Food"
+      expect(object.super_class_type.id).to eq "Food"
     end
     transform(%q{class Soup extends special.kitchen.Food {
     }},:class_declaration) do |object|
-      expect(object.unresolved_super_class).to eq "special.kitchen.Food"
+      expect(object.super_class_type.id).to eq "special.kitchen.Food"
     end
   end
 

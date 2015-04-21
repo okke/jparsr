@@ -21,30 +21,13 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
+class JParsr::Type < JParsr::Base
 
+  attr_reader :id
 
-require 'jparsr/model/base'
-require 'jparsr/model/source_file'
-require 'jparsr/model/package'
-require 'jparsr/model/import'
-require 'jparsr/model/type'
-require 'jparsr/model/class'
+  def initialize(tree, package=nil, source=nil)
+    super(tree)
 
-module JParsr 
-
-  class Transformer
-
-    def class_declaration(tree)
-      JParsr::Class.new(tree)
-    end
-
-    def root(tree)
-      JParsr::SourceFile.new(tree)
-    end
-
-    def apply(tree, rule=:root)
-      self.send(rule, tree)
-    end
+    @id = ids_to_name(tree)
   end
-
 end

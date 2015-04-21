@@ -35,7 +35,7 @@ class JParsr::Class < JParsr::Base
   attr_reader :name
   attr_reader :visibility
 
-  attr_reader :unresolved_super_class
+  attr_reader :super_class_type
   attr_reader :unresolved_interfaces
 
   def initialize(tree, package=nil, source=nil)
@@ -63,7 +63,7 @@ class JParsr::Class < JParsr::Base
       @abstract = true if mod.has_key?(:abstract)
     end
 
-    @unresolved_super_class = ids_to_name(tree[:extends][:class]) if tree[:extends]
+    @super_class_type = JParsr::Type.new(tree[:extends][:class]) if tree[:extends]
 
     @unresolved_interfaces = []
     if tree[:implements]
