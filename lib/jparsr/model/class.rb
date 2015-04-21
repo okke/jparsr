@@ -54,7 +54,7 @@ class JParsr::Class < JParsr::Base
     @parameters = []
     if tree[:name][:generic]
       [tree[:name][:generic][:class]].flatten.each do |parameter|
-        @parameters << JParsr::ClassParameter.new(parameter[:class])
+        @parameters << JParsr::ClassParameter.new(parameter[:parameter])
       end
     end
 
@@ -111,8 +111,19 @@ end
 class JParsr::ClassParameter < JParsr::Base
   attr_reader :name
 
+  attr_reader :extends
+
   def initialize(tree)
-    @name = tree[:id]
+    super(tree)
+
+    @name = tree[:class][:id]
+
+    @extends = []
+    if(tree[:extends]) 
+      [tree[:extends]].flatten.each do |e|
+        @extends << JParsr::Type.new(e)
+      end
+    end
   end
 end
 

@@ -28,7 +28,16 @@ shared_examples :transform_generic_types do
     }},:class_declaration) do |object|
       expect(object.is_a? JParsr::Class).to be true
       expect(object.name).to eq "Recipy"
-      expect(object.parameters.map{|p| p.name}).to eq ["Soup"]
+      expect(object.parameters[0].name).to eq "Soup"
+    end
+  end
+
+  it "should transform a class parameter extending a type" do
+    transform(%q{class Recipy<Soup extends Food, Bread> {
+    }},:class_declaration) do |object|
+      expect(object.is_a? JParsr::Class).to be true
+      expect(object.name).to eq "Recipy"
+      expect(object.parameters[0].extends[0].id).to eq "Food"
     end
   end
 

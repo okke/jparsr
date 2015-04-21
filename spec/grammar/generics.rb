@@ -37,9 +37,16 @@ shared_examples :generics do
     })
   end
 
-  it "should accept a generic class with parameters using the extend clause" do
+  it "should accept a generic class with parameters using the extends clause" do
     parse(%q{
       class Soep<Stock extends Food, MainVegatable extends Food> {
+      }
+    })
+  end
+
+  it "should accept a generic class with parameters using multiple extends clauses" do
+    parse(%q{
+      class Soep<Stock extends Food & Liquid> {
       }
     })
   end

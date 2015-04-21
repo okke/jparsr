@@ -59,7 +59,7 @@ module JParsr
     rule(:lt)          { str('<') >> skip}
     rule(:gt)          { str('>') >> skip}
     rule(:at)          { str('@') >> skip}
-
+    rule(:and_sign)    { str('&') >> skip}
 
     rule(:multiply_op)    { (str('*') >> str('=').absnt?).as(:multiply) >> skip}
     rule(:divide_op)      { (str('/') >> str('=').absnt?).as(:divide) >> skip}
@@ -198,11 +198,11 @@ module JParsr
     rule(:package_name) { id.as(:id) >> (dot >> id.as(:id)).repeat.maybe }
 
     rule(:class_parameter) do
-      type >> (extends_kw >> type_name.as(:extends)).maybe 
+      type >> (extends_kw >> type_name >> (and_sign >> type_name ).repeat).as(:extends).maybe 
     end
 
     rule(:class_parameters) do
-      class_parameter >> (comma >> class_parameter).repeat
+      class_parameter.as(:parameter) >> (comma >> class_parameter.as(:parameter)).repeat
     end
 
     rule(:annotation) do
