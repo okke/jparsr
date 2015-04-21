@@ -41,6 +41,16 @@ shared_examples :transform_generic_types do
     end
   end
 
+  it "should transform a class parameter extending a type" do
+    transform(%q{class Recipy<Soup extends Food & Liquid> {
+    }},:class_declaration) do |object|
+      expect(object.is_a? JParsr::Class).to be true
+      expect(object.name).to eq "Recipy"
+      expect(object.parameters[0].extends[0].id).to eq "Food"
+      expect(object.parameters[0].extends[1].id).to eq "Liquid"
+    end
+  end
+
   it "should transform a multiple class parameters" do
     transform(%q{class Recipy<Soup, MainIngredient> {
     }},:class_declaration) do |object|
