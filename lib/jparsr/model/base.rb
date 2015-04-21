@@ -21,14 +21,27 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
+require 'securerandom'
+
 class JParsr::Base
 
+  attr_reader :uid
+
   def initialize(tree)
+    @uid = JParsr::UID.new
   end
 
   private
 
   def ids_to_name(tree)
     [tree].flatten.map { |v| v[:id].to_s }.join(".")
+  end
+end
+
+class JParsr::UID
+  attr_reader :str
+
+  def initialize()
+    @str = SecureRandom.uuid
   end
 end

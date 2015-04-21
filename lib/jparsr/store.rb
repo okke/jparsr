@@ -67,6 +67,7 @@ class JParsr::StoreReader
 
   def retrieve(key, &block)
     found = @store[key]
+    found = @store[found.str] if found and found.is_a?(JParsr::UID)
     yield found if block_given?
     found
   end
@@ -78,10 +79,17 @@ class JParsr::StoreWriter
   end
 
   def add_source(name, source)
-    @store["source:#{name}"] = source
+    add_object("source:#{name}", source)
 
     source.classes.each do |clazz|
-      @store["class:#{clazz.id}"] = clazz
+      add_object("class:#{clazz.id}", clazz)
     end
+  end
+
+  private
+
+  def add_object(key,value)
+    @store[key] = value.uid
+    @store[value.uid.str] = value
   end
 end
