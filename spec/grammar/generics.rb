@@ -96,6 +96,15 @@ shared_examples :generics do
     })
   end
 
+  it "should accept a generic class with a wildcard extends clause as type for method parameters" do
+    parse(%q{
+      class Soep {
+        public void use(List<? extends Eatable> ingredients) {
+        }
+      }
+    })
+  end
+
   it "should accept a generic class as type for method return values" do
     parse(%q{
       class Soep {

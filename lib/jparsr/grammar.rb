@@ -60,6 +60,7 @@ module JParsr
     rule(:gt)          { str('>') >> skip}
     rule(:at)          { str('@') >> skip}
     rule(:and_sign)    { str('&') >> skip}
+    rule(:wildcard)    { str('?') >> skip}
 
     rule(:multiply_op)    { (str('*') >> str('=').absnt?).as(:multiply) >> skip}
     rule(:divide_op)      { (str('/') >> str('=').absnt?).as(:divide) >> skip}
@@ -198,7 +199,7 @@ module JParsr
     rule(:package_name) { id.as(:id) >> (dot >> id.as(:id)).repeat.maybe }
 
     rule(:class_parameter) do
-      type >> (extends_kw >> type_name >> (and_sign >> type_name ).repeat).as(:extends).maybe 
+      (type | wildcard) >> (extends_kw >> type_name >> (and_sign >> type_name ).repeat).as(:extends).maybe 
     end
 
     rule(:class_parameters) do
