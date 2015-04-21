@@ -21,17 +21,24 @@
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
 
-require 'spec_helper'
+shared_examples :transform_generic_types do
 
-require 'transformer/files'
-require 'transformer/classes'
-require 'transformer/generics'
+  it "should transform a class parameter" do
+    transform(%q{class Recipy<Soup> {
+    }},:class_declaration) do |object|
+      expect(object.is_a? JParsr::Class).to be true
+      expect(object.name).to eq "Recipy"
+      expect(object.parameters.map{|p| p.name}).to eq ["Soup"]
+    end
+  end
 
-
-describe JParsr::Transformer do
-
-  it_behaves_like :transform_files
-  it_behaves_like :transform_classes
-  it_behaves_like :transform_generic_types
+  it "should transform a multiple class parameters" do
+    transform(%q{class Recipy<Soup, MainIngredient> {
+    }},:class_declaration) do |object|
+      expect(object.is_a? JParsr::Class).to be true
+      expect(object.name).to eq "Recipy"
+      expect(object.parameters.map{|p| p.name}).to eq ["Soup", "MainIngredient"]
+    end
+  end
 
 end

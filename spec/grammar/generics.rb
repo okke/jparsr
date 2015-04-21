@@ -126,7 +126,7 @@ shared_examples :generics do
     })
   end
 
-  it "should accept nexted generics" do
+  it "should accept nested generics" do
     parse(%q{
       class Soep {
         List<List<String>> ingredients;  

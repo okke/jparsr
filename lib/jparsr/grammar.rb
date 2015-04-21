@@ -197,9 +197,12 @@ module JParsr
 
     rule(:package_name) { id.as(:id) >> (dot >> id.as(:id)).repeat.maybe }
 
-
     rule(:class_parameter) do
-      type >> (extends_kw >> type_name.as(:extends)).maybe >> (comma >> class_parameter.as(:more)).maybe
+      type >> (extends_kw >> type_name.as(:extends)).maybe 
+    end
+
+    rule(:class_parameters) do
+      class_parameter >> (comma >> class_parameter).repeat
     end
 
     rule(:annotation) do
@@ -216,7 +219,7 @@ module JParsr
     #
     rule(:generic_type) do
       lt >>
-      class_parameter.as(:class) >>
+      class_parameters.as(:class) >>
       gt
     end
 

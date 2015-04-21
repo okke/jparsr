@@ -38,6 +38,8 @@ class JParsr::Class < JParsr::Base
   attr_reader :super_class_type
   attr_reader :interface_types
 
+  attr_reader :parameters
+
   def initialize(tree, package=nil, source=nil)
     super(tree)
 
@@ -48,6 +50,13 @@ class JParsr::Class < JParsr::Base
 
     @id = @name
     @id = "#{@package.name}.#{@name}" if @package and @package.name and @package.name != ""
+
+    @parameters = []
+    if tree[:name][:generic]
+      [tree[:name][:generic][:class]].flatten.each do |parameter|
+        @parameters << JParsr::ClassParameter.new(parameter[:class])
+      end
+    end
 
     @visibility = :default
     @final = false;
@@ -97,5 +106,13 @@ class JParsr::Class < JParsr::Base
     @final
   end
 
+end
+
+class JParsr::ClassParameter < JParsr::Base
+  attr_reader :name
+
+  def initialize(tree)
+    @name = tree[:id]
+  end
 end
 
