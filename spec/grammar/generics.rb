@@ -44,6 +44,34 @@ shared_examples :generics do
     })
   end
 
+  it "should accept a class exending a generic class" do
+    parse(%q{
+      class Soep extends LiquidVersionOf<Vegatable> {
+      }
+    })
+  end
+
+  it "should accept a class exending a generic class with multiple class parameters" do
+    parse(%q{
+      class Soep extends LiquidVersionOf<Vegatable, Meat> {
+      }
+    })
+  end
+
+  it "should accept a class implementing a generic interface" do
+    parse(%q{
+      class Soep implements LiquidVersionOf<Vegatable> {
+      }
+    })
+  end
+
+  it "should accept a class implementing a generic interface with multiple class parameters" do
+    parse(%q{
+      class Soep implements LiquidVersionOf<Vegatable, Meat> {
+      }
+    })
+  end
+
   it "should accept a generic class as type for members" do
     parse(%q{
       class Soep {
