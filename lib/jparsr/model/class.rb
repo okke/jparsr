@@ -42,6 +42,8 @@ class JParsr::Class < JParsr::Base
 
   attr_reader :class_fields
   attr_reader :class_methods
+  attr_reader :instance_fields
+  attr_reader :instance_methods
 
   def initialize(tree, package=nil, source=nil)
     super(tree)
@@ -86,6 +88,8 @@ class JParsr::Class < JParsr::Base
 
     @class_fields = []
     @class_methods = []
+    @instance_fields = []
+    @instance_methods = []
     if tree[:block] and tree[:block].respond_to?(:map)
       tree[:block].map {|b| b[:member]}.each do |member|
         if member[:modifiers].select {|m| m.has_key?(:static)}.size > 0
@@ -93,6 +97,12 @@ class JParsr::Class < JParsr::Base
             @class_methods << JParsr::Method.new(member)
           else
             @class_fields << JParsr::Field.new(member)
+          end
+        else
+          if member[:member] and member[:member][:method]
+            @instance_methods << JParsr::Method.new(member)
+          else
+            @instance_fields << JParsr::Field.new(member)
           end
         end
       end

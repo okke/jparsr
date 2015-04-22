@@ -98,15 +98,18 @@ shared_examples :transform_classes do
     end
   end
 
-  it "should build references to class members" do
+  it "should distinquish class members from instance members" do
     transform(%q{class Soup {
       static Object o1;
       static Object o2;
       private Stock liquid;
       public static void boil() {}
+      public void freeze() {}
     }},:class_declaration) do |object|
       expect(object.class_fields.size).to eq 2
       expect(object.class_methods.size).to eq 1
+      expect(object.instance_fields.size).to eq 1
+      expect(object.instance_methods.size).to eq 1
     end
   end
 
