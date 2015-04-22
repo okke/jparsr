@@ -40,6 +40,9 @@ class JParsr::Class < JParsr::Base
 
   attr_reader :parameters
 
+  attr_reader :class_fields
+  attr_reader :class_methods
+
   def initialize(tree, package=nil, source=nil)
     super(tree)
 
@@ -78,6 +81,20 @@ class JParsr::Class < JParsr::Base
     if tree[:implements]
       [tree[:implements]].flatten.each do |interface|
         @interface_types << JParsr::Type.new(interface[:class])
+      end
+    end
+
+    @class_fields = []
+    @class_methods = []
+    if tree[:block] and tree[:block].respond_to?(:map)
+      tree[:block].map {|b| b[:member]}.each do |member|
+        if member[:modifiers].select {|m| m.has_key?(:static)}.size > 0
+          if member[:member] and member[:member][:method]
+            @class_methods << JParsr::Method.new(member)
+          else
+            @class_fields << JParsr::Field.new(member)
+          end
+        end
       end
     end
   end
@@ -124,6 +141,24 @@ class JParsr::ClassParameter < JParsr::Base
         @extends << JParsr::Type.new(e)
       end
     end
+  end
+end
+
+class JParsr::Member < JParsr::Base
+  def initialize(tree)
+    super(tree)
+  end
+end
+
+class JParsr::Field < JParsr::Member
+  def initialize(tree)
+    super(tree)
+  end
+end
+
+class JParsr::Method < JParsr::Member
+  def initialize(tree)
+    super(tree)
   end
 end
 

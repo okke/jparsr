@@ -388,15 +388,15 @@ module JParsr
     end
 
     rule(:member_modifier) do
-      (public_kw    |
-       private_kw   |
-       protected_kw |
-       static_kw    |
-       final_kw     |
-       transient_kw |
-       volatile_kw  |
-       abstract_kw  |
-       synchronized_kw)
+      (public_kw.as(:public)       |
+       private_kw.as(:private)     |
+       protected_kw.as(:protected) |
+       static_kw.as(:static)       |
+       final_kw.as(:final)         |
+       transient_kw.as(:transient) |
+       volatile_kw.as(:volatile)   |
+       abstract_kw.as(:abstract)   |
+       synchronized_kw.as(:synchronized) )
     end 
 
     rule(:field_name) do
@@ -404,7 +404,7 @@ module JParsr
     end
 
     rule(:field_names) do
-      field_name >> (comma >> field_name).repeat.maybe
+      field_name.as(:name) >> (comma >> field_name.as(:name)).repeat.maybe
     end
 
     rule(:field_initializer) do
@@ -555,15 +555,18 @@ module JParsr
 
     # TODO can parse multiple method names
     #
+    rule(:member_field_or_method) do
+      field_names.as(:names) >> 
+      (method_declaration.as(:method) | (field_initializer.as(:initializer).maybe >> semicolon.maybe))
+    end
+
     rule(:member_field_or_method_declaration) do
-      field_names.as(:name) >> 
-      (method_declaration.as(:method) | (field_initializer.as(:initializer).maybe >> semicolon.maybe)) >>
-      (comma >> member_field_or_method_declaration.as(:member)).maybe
+      member_field_or_method >> (comma >> member_field_or_method).repeat
     end
 
     rule(:member_declaration) do
       annotations.as(:annotations).maybe >>
-      member_modifier.as(:modifier).repeat >> 
+      member_modifier.repeat.as(:modifiers) >> 
       generic_type.as(:generic).maybe >>
       type.as(:type) >> 
       ( 
