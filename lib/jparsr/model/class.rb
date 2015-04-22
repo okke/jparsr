@@ -20,8 +20,11 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
+#
 
 class JParsr::Class < JParsr::Base
+
+  include JParsr::Modifiers
 
   # class belongs to a package
   #
@@ -33,7 +36,6 @@ class JParsr::Class < JParsr::Base
 
   attr_reader :id
   attr_reader :name
-  attr_reader :visibility
 
   attr_reader :super_class_type
   attr_reader :interface_types
@@ -47,6 +49,7 @@ class JParsr::Class < JParsr::Base
 
   def initialize(tree, package=nil, source=nil)
     super(tree)
+    self.init_modifiers(tree)
 
     @package = package
     @source = source
@@ -61,20 +64,6 @@ class JParsr::Class < JParsr::Base
       [tree[:name][:generic][:class]].flatten.each do |parameter|
         @parameters << JParsr::ClassParameter.new(parameter[:parameter])
       end
-    end
-
-    @visibility = :default
-    @final = false;
-    @static = false;
-    @abstract = false;
-
-    tree[:modifiers].each do |mod|
-      @visibility = :public if mod.has_key?(:public)
-      @visibility = :private if mod.has_key?(:private)
-      @visibility = :protected if mod.has_key?(:protected)
-      @final = true if mod.has_key?(:final)
-      @static = true if mod.has_key?(:static)
-      @abstract = true if mod.has_key?(:abstract)
     end
 
     @super_class_type = JParsr::Type.new(tree[:extends][:class]) if tree[:extends]
@@ -109,29 +98,6 @@ class JParsr::Class < JParsr::Base
     end
   end
 
-  def public?
-    @visibility == :public
-  end
-
-  def private?
-    @visibility == :private
-  end
-
-  def protected?
-    @visibility == :protected
-  end
-
-  def abstract?
-    @abstract
-  end
-
-  def static?
-    @static
-  end
-
-  def final?
-    @final
-  end
 
 end
 
@@ -155,8 +121,12 @@ class JParsr::ClassParameter < JParsr::Base
 end
 
 class JParsr::Member < JParsr::Base
+
+  include JParsr::Modifiers
+
   def initialize(tree)
     super(tree)
+    self.init_modifiers(tree)
   end
 end
 

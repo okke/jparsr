@@ -20,32 +20,51 @@
 # ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 # OTHER DEALINGS IN THE SOFTWARE.
 # 
+#
 
+module JParsr::Modifiers
+  attr_reader :visibility
 
+  def init_modifiers(tree)
 
-require 'jparsr/model/base'
-require 'jparsr/model/modifiers'
-require 'jparsr/model/source_file'
-require 'jparsr/model/package'
-require 'jparsr/model/import'
-require 'jparsr/model/type'
-require 'jparsr/model/class'
+    @visibility = :default
+    @final = false;
+    @static = false;
+    @abstract = false;
 
-module JParsr 
-
-  class Transformer
-
-    def class_declaration(tree)
-      JParsr::Class.new(tree)
-    end
-
-    def root(tree)
-      JParsr::SourceFile.new(tree)
-    end
-
-    def apply(tree, rule=:root)
-      self.send(rule, tree)
+    tree[:modifiers].each do |mod|
+      @visibility = :public if mod.has_key?(:public)
+      @visibility = :private if mod.has_key?(:private)
+      @visibility = :protected if mod.has_key?(:protected)
+      @final = true if mod.has_key?(:final)
+      @static = true if mod.has_key?(:static)
+      @abstract = true if mod.has_key?(:abstract)
     end
   end
 
+  def public?
+    @visibility == :public
+  end
+
+  def private?
+    @visibility == :private
+  end
+
+  def protected?
+    @visibility == :protected
+  end
+
+  def abstract?
+    @abstract
+  end
+
+  def static?
+    @static
+  end
+
+  def final?
+    @final
+  end
 end
+
+
