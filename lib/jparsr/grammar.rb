@@ -562,12 +562,12 @@ module JParsr
     end
 
     rule(:member_declaration) do
-      annotations.maybe >>
-      member_modifier.as(:modifier).repeat.maybe >> 
+      annotations.as(:annotations).maybe >>
+      member_modifier.as(:modifier).repeat >> 
       generic_type.as(:generic).maybe >>
       type.as(:type) >> 
       ( 
-        method_declaration.as(:constructor) | # constructor
+        method_declaration.as(:constructor) | 
         member_field_or_method_declaration.as(:member) 
       )
     end
@@ -590,7 +590,7 @@ module JParsr
 
     rule(:class_block) do
       lcurly >>
-      class_body_declaration.as(:class_body_declaration).repeat.maybe >>
+      class_body_declaration.repeat >>
       rcurly
     end
 
